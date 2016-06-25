@@ -1,0 +1,24 @@
+#######################################
+# Syntax Coloring Map
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+ResponsiveAnalogRead	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+getValue					KEYWORD2
+getRawValue					KEYWORD2
+hasChanged					KEYWORD2
+update						KEYWORD2
+setSnapMultiplier			KEYWORD2
+enableSleep					KEYWORD2
+disableSleep				KEYWORD2
+setSleepDelay				KEYWORD2
+setSleepActivityThreshold	KEYWORD2
+setAwakeActivityThreshold	KEYWORD2
+setAnalogResolution			KEYWORD2
