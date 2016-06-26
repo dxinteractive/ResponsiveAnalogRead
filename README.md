@@ -5,8 +5,8 @@ ResponsiveAnalogRead is an Arduino library for eliminating noise in analogRead i
 
 1. Be able to reduce large amounts of noise when reading a signal. So if a voltage is unchanging aside from noise, the values returned should never change due to noise alone.
 2. Be extremely responsive (i.e. not sluggish) when the voltage changes quickly.
-3. Also be responsive when a voltage stops changing - the values returned must stop changing almost immediately after.
-4. The returned values must avoid 'jumping' up several numbers at once, especially when the input signal changes very slowly. It's better to transition smoothly as long as that smooth transition does not take too long.
+3. Have the option to be responsive when a voltage *stops* changing - when enabled the values returned must stop changing almost immediately after.
+4. The returned values must avoid 'jumping' up several numbers at once, especially when the input signal changes very slowly. It's better to transition smoothly as long as that smooth transition is short.
 
 ##How to install
 
