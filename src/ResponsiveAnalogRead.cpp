@@ -49,6 +49,17 @@ int ResponsiveAnalogRead::getResponsiveValue(int newValue)
   // get current milliseconds
   unsigned long ms = millis();
 
+  // if sleep and edge snap are enabled and the new value is very close to an edge, drag it a little closer to the edges
+  // This'll make it easier to pull the output values right to the extremes without sleeping,
+  // and it'll make movements right near the edge appear larger, making it easier to wake up
+  if(sleepEnable && edgeSnapEnable) {
+    if(newValue < sleepActivityThreshold) {
+      newValue = (newValue * 2) - sleepActivityThreshold;
+    } else if(newValue > analogResolution - sleepActivityThreshold) {
+      newValue = (newValue * 2) - analogResolution + sleepActivityThreshold;
+    }
+  }
+
   // get difference between new input value and current smooth value
   unsigned int diff = abs(newValue - smoothValue);
   
@@ -95,6 +106,13 @@ int ResponsiveAnalogRead::getResponsiveValue(int newValue)
   
   // calculate the exponential moving average based on the snap
   smoothValue += (newValue - smoothValue) * snap;
+
+  // ensure output is in bounds
+  if(smoothValue < 0.0) {
+    smoothValue = 0.0;
+  } else if(smoothValue > analogResolution - 1) {
+    smoothValue = analogResolution - 1;
+  }
   
   // expected output is an integer
   return (int)smoothValue;
