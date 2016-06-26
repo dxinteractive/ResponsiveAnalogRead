@@ -64,12 +64,10 @@ void loop() {
 
 Sleep allows increasingly small changes in the output value to be ignored, so instead of having the responsiveValue slide into position over a couple of seconds, it stops when it's "close enough". It's enabled by default. Here's a summary of how it works:
 
-```
 1. "Sleep" is when the output value decides to ignore increasingly small changes.
 2. When it sleeps, it is less likely to start moving again, but a large enough nudge will wake it up and begin responding as normal.
 3. It classifies changes in the input voltage as being "active" or not, so it can set a timer and tell when it hasn't been sufficiently active for a while. That lack of activity can tell it to sleep.
 4. It requires different thresholds of movement for both sleep and awake states, which defines just how much movement needs to occur to count as being "active".
-```
 
 It's behaviour can be modified with the following methods:
 - `void enableEdgeSnap() // edge snap ensures that values at the edges of the spectrum (0 and 1023) can be easily reached when sleep is enabled`
@@ -86,9 +84,6 @@ SnapMultiplier is a value from 0 to 1 that controls the amount of easing. Increa
 ###Analog resolution
 - `void setAnalogResolution(unsigned int resolution)`
 
-If your ADC is something other than 10bit (1024), set that using this
-
-##Further functionality
-See ResponsiveAnalogRead.h for details on any remaining functionality it provides.
+If your ADC is something other than 10bit (1024), set that using this.
 
 Damien Clarke, 2016
