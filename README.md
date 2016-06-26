@@ -1,4 +1,5 @@
 #ResponsiveAnalogRead
+[http://damienclarke.me/code/responsive-analog-read](http://damienclarke.me/code/responsive-analog-read)
 
 ResponsiveAnalogRead is an Arduino library for eliminating noise in analogRead inputs without decreasing responsiveness. It sets out to achieve the following:
 
