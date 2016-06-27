@@ -64,7 +64,7 @@ void loop() {
 - `void enableSleep()`
 - `void disableSleep()`
 
-Sleep allows increasingly small changes in the output value to be ignored, so instead of having the responsiveValue slide into position over a couple of seconds, it stops when it's "close enough". It's enabled by default. Here's a summary of how it works:
+Sleep allows you to minimise the amount of responsive value changes over time. Increasingly small changes in the output value to be ignored, so instead of having the responsiveValue slide into position over a couple of seconds, it stops when it's "close enough". It's enabled by default. Here's a summary of how it works:
 
 1. "Sleep" is when the output value decides to ignore increasingly small changes.
 2. When it sleeps, it is less likely to start moving again, but a large enough nudge will wake it up and begin responding as normal.
@@ -73,7 +73,7 @@ Sleep allows increasingly small changes in the output value to be ignored, so in
 
 It's behaviour can be modified with the following methods:
 - `void enableEdgeSnap() // edge snap ensures that values at the edges of the spectrum (0 and 1023) can be easily reached when sleep is enabled`
-- `void setSleepDelay(unsigned int ms) // sets the amount of time before sleeping
+- `void setSleepDelay(unsigned int ms) // sets the amount of time before sleeping`
 - `void setSleepActivityThreshold(unsigned int newThreshold) // the amount of movement that must take place while asleep for it to register as activity and start moving the output value. Defaults to 20.`
 - `void setAwakeActivityThreshold(unsigned int newThreshold) // the amount of movement that must take place while awake for it to register as activity, and reset the timer before sleep occurs. Defaults to 5.`
 
