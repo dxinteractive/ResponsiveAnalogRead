@@ -12,6 +12,10 @@ You can preview the way the algorithm works with [sleep enabled](http://codepen.
 
 An article discussing the design of the algorithm can be found [here](http://damienclarke.me/code/posts/writing-a-better-noise-reducing-analogread).
 
+###Impending version bump
+Written 14/07/2016
+Improvements to the sleep algorithm will be pushed as a minor version upgrade soon. Special thanks to /u/brontide for the assistance.
+
 ##How to install
 
 In the Arduino IDE, go to Sketch > Include libraries > Manage libraries, and search for ResponsiveAnalogInput.
