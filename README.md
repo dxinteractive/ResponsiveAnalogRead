@@ -14,6 +14,7 @@ An article discussing the design of the algorithm can be found [here](http://dam
 
 ###Impending version bump
 Written 14/07/2016
+
 Improvements to the sleep algorithm will be pushed as a minor version upgrade soon. Special thanks to /u/brontide for the assistance.
 
 ##How to install
