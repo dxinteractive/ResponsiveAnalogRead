@@ -53,21 +53,21 @@ class ResponsiveAnalogRead
     // edge snap ensures that values at the edges of the spectrum (0 and 1023) can be easily reached when sleep is enabled
     inline void disableEdgeSnap() { edgeSnapEnable = false; }
     inline void setSleepDelay(unsigned int ms) { sleepDelayMS = ms; } // sets the amount of time before sleeping
-    inline void setSleepActivityThreshold(unsigned int newThreshold) { sleepActivityThreshold = newThreshold; }
+    inline void setSleepActivityThreshold(int newThreshold) { sleepActivityThreshold = newThreshold; }
     // the amount of movement that must take place while asleep for it to register as activity and start moving the output value. Defaults to 20
-    inline void setAwakeActivityThreshold(unsigned int newThreshold) { awakeActivityThreshold = newThreshold; }
+    inline void setAwakeActivityThreshold(int newThreshold) { awakeActivityThreshold = newThreshold; }
     // the amount of movement that must take place while awake for it to register as activity, and reset the timer before sleep occurs. Defaults to 5.
-    inline void setAnalogResolution(unsigned int resolution) { analogResolution = resolution; }
+    inline void setAnalogResolution(int resolution) { analogResolution = resolution; }
     // if your ADC is something other than 10bit (1024), set that here
 
   private:
     int pin;
-    unsigned int analogResolution = 1024;
+    int analogResolution = 1024;
     float snapMultiplier;
     bool sleepEnable;
     unsigned int sleepDelayMS;
-    unsigned int sleepActivityThreshold = 20;
-    unsigned int awakeActivityThreshold = 5;
+    int sleepActivityThreshold = 20;
+    int awakeActivityThreshold = 5;
     bool edgeSnapEnable = true;
 
     float smoothValue;
