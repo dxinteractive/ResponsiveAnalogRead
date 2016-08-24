@@ -46,37 +46,30 @@ void ResponsiveAnalogRead::update()
 
 int ResponsiveAnalogRead::getResponsiveValue(int newValue)
 {
-  // get current milliseconds
-  unsigned long ms = millis();
-
   // if sleep and edge snap are enabled and the new value is very close to an edge, drag it a little closer to the edges
   // This'll make it easier to pull the output values right to the extremes without sleeping,
   // and it'll make movements right near the edge appear larger, making it easier to wake up
   if(sleepEnable && edgeSnapEnable) {
-    if(newValue < sleepActivityThreshold) {
-      newValue = (newValue * 2) - sleepActivityThreshold;
-    } else if(newValue > analogResolution - sleepActivityThreshold) {
-      newValue = (newValue * 2) - analogResolution + sleepActivityThreshold;
+    if(newValue < activityThreshold) {
+      newValue = (newValue * 2) - activityThreshold;
+    } else if(newValue > analogResolution - activityThreshold) {
+      newValue = (newValue * 2) - analogResolution + activityThreshold;
     }
   }
 
   // get difference between new input value and current smooth value
   unsigned int diff = abs(newValue - smoothValue);
+
+  // measure the difference between the new value and current value over time    
+  // to get a more reasonable indication of how far off the current smooth value is   
+  // compared to the actual measurements    
+  errorEMA += ((newValue - smoothValue) - errorEMA) * 0.4;
   
   // if sleep has been enabled, keep track of when we're asleep or not by marking the time of last activity
   // and testing to see how much time has passed since then
   if(sleepEnable) {
-    unsigned int activityThreshold = sleeping ? sleepActivityThreshold : awakeActivityThreshold;
-
-    // if diff is greater than the threshold,
-    // indicate that activity has recently occured
-    if(diff > activityThreshold) {
-      lastActivityMS = ms;
-    }
-
     // recalculate sleeping status
-    // (asleep if last activity was over sleepDelayMS ago)
-    sleeping = lastActivityMS + sleepDelayMS < ms;
+    sleeping = abs(errorEMA) < activityThreshold;
   }
   
   // if we're allowed to sleep, and we're sleeping
@@ -101,7 +94,7 @@ int ResponsiveAnalogRead::getResponsiveValue(int newValue)
   // when sleep is enabled, the emphasis is stopping on a responsiveValue quickly, and it's less about easing into position.
   // If sleep is enabled, add a small amount to snap so it'll tend to snap into a more accurate position before sleeping starts.
   if(sleepEnable) {
-    snap *= 0.8 + 0.2;
+    snap *= 0.5 + 0.5;
   }
   
   // calculate the exponential moving average based on the snap
