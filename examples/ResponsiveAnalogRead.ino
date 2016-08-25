@@ -6,7 +6,7 @@ const int ANALOG_PIN = A0;
 
 // make a ResponsiveAnalogRead object, pass in the pin, and either true or false depending on if you want sleep enabled
 // enabling sleep will cause values to take less time to stop changing and potentially stop changing more abruptly,
-//   where as disabling sleep will cause values to ease into their correct position smoothly
+//   where as disabling sleep will cause values to ease into their correct position smoothly and more accurately
 ResponsiveAnalogRead analog(ANALOG_PIN, true);
 
 // the next optional argument is snapMultiplier, which is set to 0.01 by default

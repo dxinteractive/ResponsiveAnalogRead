@@ -38,7 +38,11 @@ ResponsiveAnalogRead::ResponsiveAnalogRead(int pin, bool sleepEnable, float snap
 
 void ResponsiveAnalogRead::update()
 {
-  rawValue = analogRead(pin);
+  this->update(analogRead(pin));
+}
+
+void ResponsiveAnalogRead::update(int rawValue)
+{
   prevResponsiveValue = responsiveValue;
   responsiveValue = getResponsiveValue(rawValue);
   responsiveValueHasChanged = responsiveValue != prevResponsiveValue;
@@ -60,9 +64,9 @@ int ResponsiveAnalogRead::getResponsiveValue(int newValue)
   // get difference between new input value and current smooth value
   unsigned int diff = abs(newValue - smoothValue);
 
-  // measure the difference between the new value and current value over time    
-  // to get a more reasonable indication of how far off the current smooth value is   
-  // compared to the actual measurements    
+  // measure the difference between the new value and current value
+  // and use another exponential moving average to work out what
+  // the current margin of error is
   errorEMA += ((newValue - smoothValue) - errorEMA) * 0.4;
   
   // if sleep has been enabled, keep track of when we're asleep or not by marking the time of last activity
