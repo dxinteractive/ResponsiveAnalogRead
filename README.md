@@ -95,7 +95,6 @@ Sleep allows you to minimise the amount of responsive value changes over time. I
 
 It's behaviour can be modified with the following methods:
 - `void enableEdgeSnap() // edge snap ensures that values at the edges of the spectrum (0 and 1023) can be easily reached when sleep is enabled`
-- `void setSleepDelay(int ms) // sets the amount of time before sleeping`
 - `void setActivityThreshold(float newThreshold) // the amount of movement that must take place for it to register as activity and start moving the output value. Defaults to 4.0. (version 1.1+)`
 
 ###Snap multiplier
