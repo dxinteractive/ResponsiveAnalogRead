@@ -1,21 +1,15 @@
 #ResponsiveAnalogRead
-[http://damienclarke.me/code/responsive-analog-read](http://damienclarke.me/code/responsive-analog-read)
 
 ResponsiveAnalogRead is an Arduino library for eliminating noise in analogRead inputs without decreasing responsiveness. It sets out to achieve the following:
 
 1. Be able to reduce large amounts of noise when reading a signal. So if a voltage is unchanging aside from noise, the values returned should never change due to noise alone.
 2. Be extremely responsive (i.e. not sluggish) when the voltage changes quickly.
-3. Have the option to be responsive when a voltage *stops* changing - when enabled the values returned must stop changing almost immediately after.
+3. Have the option to be responsive when a voltage *stops* changing - when enabled the values returned must stop changing almost immediately after. When this option is enabled, a very small sacrifice in accuracy is permitted.
 4. The returned values must avoid 'jumping' up several numbers at once, especially when the input signal changes very slowly. It's better to transition smoothly as long as that smooth transition is short.
 
-You can preview the way the algorithm works with [sleep enabled](http://codepen.io/dxinteractive/pen/KzGegy) (minimising the time spend transitioning between values) and with [sleep disabled](http://codepen.io/dxinteractive/pen/ezdJxL) (transitioning responsively but smooth).
+You can preview the way the algorithm works with [sleep enabled](http://codepen.io/dxinteractive/pen/zBEbpP) (minimising the time spend transitioning between values) and with [sleep disabled](http://codepen.io/dxinteractive/pen/ezdJxL) (transitioning responsively and accurately but smooth).
 
 An article discussing the design of the algorithm can be found [here](http://damienclarke.me/code/posts/writing-a-better-noise-reducing-analogread).
-
-###Impending version bump
-Written 14/07/2016
-
-Improvements to the sleep algorithm will be pushed as a minor version upgrade soon. Special thanks to /u/brontide for the assistance.
 
 ##How to install
 
@@ -38,7 +32,7 @@ const int ANALOG_PIN = A0;
 
 // make a ResponsiveAnalogRead object, pass in the pin, and either true or false depending on if you want sleep enabled
 // enabling sleep will cause values to take less time to stop changing and potentially stop changing more abruptly,
-//   where as disabling sleep will cause values to ease into their correct position smoothly
+// where as disabling sleep will cause values to ease into their correct position smoothly and with slightly greater accuracy
 ResponsiveAnalogRead analog(ANALOG_PIN, true);
 
 // the next optional argument is snapMultiplier, which is set to 0.01 by default
@@ -81,6 +75,8 @@ void loop() {
 - `int getRawValue() // get the raw analogRead() value from last update`
 - `bool hasChanged() // returns true if the responsive value has changed during the last update`
 - `void update(); // updates the value by performing an analogRead() and calculating a responsive value based off it`
+- `void update(int rawValue); // updates the value by accepting a raw value and calculating a responsive value based off it (version 1.1.0+)`
+- `bool isSleeping() // returns true if the algorithm is in sleep mode (version 1.1.0+)`
 
 ##Other methods (settings)
 
@@ -98,9 +94,7 @@ Sleep allows you to minimise the amount of responsive value changes over time. I
 
 It's behaviour can be modified with the following methods:
 - `void enableEdgeSnap() // edge snap ensures that values at the edges of the spectrum (0 and 1023) can be easily reached when sleep is enabled`
-- `void setSleepDelay(unsigned int ms) // sets the amount of time before sleeping`
-- `void setSleepActivityThreshold(unsigned int newThreshold) // the amount of movement that must take place while asleep for it to register as activity and start moving the output value. Defaults to 20.`
-- `void setAwakeActivityThreshold(unsigned int newThreshold) // the amount of movement that must take place while awake for it to register as activity, and reset the timer before sleep occurs. Defaults to 5.`
+- `void setActivityThreshold(float newThreshold) // the amount of movement that must take place for it to register as activity and start moving the output value. Defaults to 4.0. (version 1.1+)`
 
 ###Snap multiplier
 
@@ -109,8 +103,18 @@ It's behaviour can be modified with the following methods:
 SnapMultiplier is a value from 0 to 1 that controls the amount of easing. Increase this to lessen the amount of easing (such as 0.1) and make the responsive values more responsive, but doing so may cause more noise to seep through when sleep is not enabled.
 
 ###Analog resolution
-- `void setAnalogResolution(unsigned int resolution)`
+- `void setAnalogResolution(int resolution)`
 
 If your ADC is something other than 10bit (1024), set that using this.
 
-Damien Clarke, 2016
+## License
+
+Licensed under the MIT License (MIT)
+
+Copyright (c) 2016, Damien Clarke
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
