@@ -21,3 +21,4 @@ disableSleep				KEYWORD2
 isSleeping   				KEYWORD2
 setActivityThreshold	    KEYWORD2
 setAnalogResolution			KEYWORD2
+enableEdgeSnap    KEYWORD2
