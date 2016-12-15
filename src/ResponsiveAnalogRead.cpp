@@ -3,24 +3,24 @@
  * Arduino library for eliminating noise in analogRead inputs without decreasing responsiveness
  *
  * Copyright (c) 2016 Damien Clarke
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.  
+ * SOFTWARE.
  */
 
 #include <Arduino.h>
@@ -30,7 +30,7 @@ ResponsiveAnalogRead::ResponsiveAnalogRead(int pin, bool sleepEnable, float snap
 {
   pinMode(pin, INPUT ); // ensure button pin is an input
   digitalWrite(pin, LOW ); // ensure pullup is off on button pin
-  
+
   this->pin = pin;
   this->sleepEnable = sleepEnable;
   setSnapMultiplier(snapMultiplier);
@@ -38,7 +38,8 @@ ResponsiveAnalogRead::ResponsiveAnalogRead(int pin, bool sleepEnable, float snap
 
 void ResponsiveAnalogRead::update()
 {
-  this->update(analogRead(pin));
+  rawValue = analogRead(pin);
+  this->update(rawValue);
 }
 
 void ResponsiveAnalogRead::update(int rawValue)
@@ -68,14 +69,13 @@ int ResponsiveAnalogRead::getResponsiveValue(int newValue)
   // and use another exponential moving average to work out what
   // the current margin of error is
   errorEMA += ((newValue - smoothValue) - errorEMA) * 0.4;
-  
-  // if sleep has been enabled, keep track of when we're asleep or not by marking the time of last activity
-  // and testing to see how much time has passed since then
+
+  // if sleep has been enabled, sleep when the amount of error is below the activity threshold
   if(sleepEnable) {
     // recalculate sleeping status
     sleeping = abs(errorEMA) < activityThreshold;
   }
-  
+
   // if we're allowed to sleep, and we're sleeping
   // then don't update responsiveValue this loop
   // just output the existing responsiveValue
@@ -92,15 +92,15 @@ int ResponsiveAnalogRead::getResponsiveValue(int newValue)
   // High values of x tend toward 0, but we want an output that begins at 0 and tends toward 1, so 1-y flips this up the right way.
   // Finally the result is multiplied by 2 and capped at a maximum of one, which means that at a certain point all larger movements are maximally snappy
 
-  // then multiply the input by SNAP_MULTIPLER so input values fit the snap curve better. 
+  // then multiply the input by SNAP_MULTIPLER so input values fit the snap curve better.
   float snap = snapCurve(diff * snapMultiplier);
-  
+
   // when sleep is enabled, the emphasis is stopping on a responsiveValue quickly, and it's less about easing into position.
   // If sleep is enabled, add a small amount to snap so it'll tend to snap into a more accurate position before sleeping starts.
   if(sleepEnable) {
     snap *= 0.5 + 0.5;
   }
-  
+
   // calculate the exponential moving average based on the snap
   smoothValue += (newValue - smoothValue) * snap;
 
@@ -110,7 +110,7 @@ int ResponsiveAnalogRead::getResponsiveValue(int newValue)
   } else if(smoothValue > analogResolution - 1) {
     smoothValue = analogResolution - 1;
   }
-  
+
   // expected output is an integer
   return (int)smoothValue;
 }
