@@ -26,13 +26,14 @@
 #include <Arduino.h>
 #include "ResponsiveAnalogRead.h"
 
-ResponsiveAnalogRead::ResponsiveAnalogRead(int pin, bool sleepEnable, float snapMultiplier)
+ResponsiveAnalogRead::ResponsiveAnalogRead(int pin, bool sleepEnable, float snapMultiplier, bool allowNegative)
 {
   pinMode(pin, INPUT ); // ensure button pin is an input
   digitalWrite(pin, LOW ); // ensure pullup is off on button pin
 
   this->pin = pin;
   this->sleepEnable = sleepEnable;
+  this->allowNegative = allowNegative;
   setSnapMultiplier(snapMultiplier);
 }
 
@@ -105,7 +106,7 @@ int ResponsiveAnalogRead::getResponsiveValue(int newValue)
   smoothValue += (newValue - smoothValue) * snap;
 
   // ensure output is in bounds
-  if(smoothValue < 0.0) {
+  if((smoothValue < 0.0) && !(allowNegative)) {
     smoothValue = 0.0;
   } else if(smoothValue > analogResolution - 1) {
     smoothValue = analogResolution - 1;
