@@ -1,4 +1,4 @@
-#ResponsiveAnalogRead
+# ResponsiveAnalogRead
 ![ResponsiveAnalogRead](http://damienclarke.me/content/2-code/2-responsive-analog-read/thumbnail.jpg)
 
 ResponsiveAnalogRead is an Arduino library for eliminating noise in analogRead inputs without decreasing responsiveness. It sets out to achieve the following:
@@ -12,15 +12,7 @@ You can preview the way the algorithm works with [sleep enabled](http://codepen.
 
 An article discussing the design of the algorithm can be found [here](http://damienclarke.me/code/posts/writing-a-better-noise-reducing-analogread).
 
-##How to install
-
-In the Arduino IDE, go to Sketch > Include libraries > Manage libraries, and search for ResponsiveAnalogInput.
-You can also just use the files directly from the src folder.
-
-Look at the example in the examples folder for an idea on how to use it in your own projects.
-The source files are also heavily commented, so check those out if you want fine control of the library's behaviour.
-
-##How to use
+## How to use
 
 Here's a basic example:
 
@@ -54,7 +46,7 @@ void loop() {
   Serial.print("\t");
   Serial.print(analog.getValue());
   
-  // if the repsonsive value has change, print out 'changed'
+  // if the responsive value has change, print out 'changed'
   if(analog.hasChanged()) {
     Serial.print("\tchanged");
   }
@@ -64,13 +56,71 @@ void loop() {
 }
 ```
 
-##Constructor arguments
+### Using your own ADC
 
-- `pin` - int, the pin to read (e.g. A0)
+```Arduino
+#include <ResponsiveAnalogRead.h>
+
+ResponsiveAnalogRead analog(0, true);
+
+void setup() {
+  // begin serial so we can see analog read values through the serial monitor
+  Serial.begin(9600);
+}
+
+void loop() {
+  // read from your ADC
+  // update the ResponsiveAnalogRead object every loop
+  int reading = YourADCReadMethod();
+  analog.update(reading);
+  Serial.print(analog.getValue());
+  
+  Serial.println("");
+  delay(20);
+}
+```
+
+### Smoothing multiple inputs
+
+```Arduino
+#include <ResponsiveAnalogRead.h>
+
+ResponsiveAnalogRead analogOne(A1, true);
+ResponsiveAnalogRead analogTwo(A2, true);
+
+void setup() {
+  // begin serial so we can see analog read values through the serial monitor
+  Serial.begin(9600);
+}
+
+void loop() {
+  // update the ResponsiveAnalogRead objects every loop
+  analogOne.update();
+  analogTwo.update();
+  
+  Serial.print(analogOne.getValue());
+  Serial.print(analogTwo.getValue());
+  
+  Serial.println("");
+  delay(20);
+}
+```
+
+## How to install
+
+In the Arduino IDE, go to Sketch > Include libraries > Manage libraries, and search for ResponsiveAnalogInput.
+You can also just use the files directly from the src folder.
+
+Look at the example in the examples folder for an idea on how to use it in your own projects.
+The source files are also heavily commented, so check those out if you want fine control of the library's behaviour.
+
+## Constructor arguments
+
+- `pin` - int, the pin to read (e.g. A0).
 - `sleepEnable` - boolean, sets whether sleep is enabled. Defaults to true. Enabling sleep will cause values to take less time to stop changing and potentially stop changing more abruptly, where as disabling sleep will cause values to ease into their correct position smoothly.
 - `snapMultiplier` - float, a value from 0 to 1 that controls the amount of easing. Defaults to 0.01. Increase this to lessen the amount of easing (such as 0.1) and make the responsive values more responsive, but doing so may cause more noise to seep through if sleep is not enabled.
 
-##Basic methods
+## Basic methods
 
 - `int getValue() // get the responsive value from last update`
 - `int getRawValue() // get the raw analogRead() value from last update`
@@ -79,9 +129,9 @@ void loop() {
 - `void update(int rawValue); // updates the value by accepting a raw value and calculating a responsive value based off it (version 1.1.0+)`
 - `bool isSleeping() // returns true if the algorithm is in sleep mode (version 1.1.0+)`
 
-##Other methods (settings)
+## Other methods (settings)
 
-###Sleep
+### Sleep
 
 - `void enableSleep()`
 - `void disableSleep()`
@@ -92,18 +142,18 @@ Sleep allows you to minimise the amount of responsive value changes over time. I
 2. When it sleeps, it is less likely to start moving again, but a large enough nudge will wake it up and begin responding as normal.
 3. It classifies changes in the input voltage as being "active" or not. A lack of activity tells it to sleep.
 
-###Activity threshold
+### Activity threshold
 - `void setActivityThreshold(float newThreshold) // the amount of movement that must take place for it to register as activity and start moving the output value. Defaults to 4.0. (version 1.1+)`
 
-###Snap multiplier
+### Snap multiplier
 - `void setSnapMultiplier(float newMultiplier)`
 
 SnapMultiplier is a value from 0 to 1 that controls the amount of easing. Increase this to lessen the amount of easing (such as 0.1) and make the responsive values more responsive, but doing so may cause more noise to seep through when sleep is not enabled.
 
-###Edge snapping
+### Edge snapping
 - `void enableEdgeSnap() // edge snap ensures that values at the edges of the spectrum (0 and 1023) can be easily reached when sleep is enabled`
 
-###Analog resolution
+### Analog resolution
 - `void setAnalogResolution(int resolution)`
 
 If your ADC is something other than 10bit (1024), set that using this.
