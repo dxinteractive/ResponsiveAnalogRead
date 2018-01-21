@@ -143,7 +143,9 @@ Sleep allows you to minimise the amount of responsive value changes over time. I
 3. It classifies changes in the input voltage as being "active" or not. A lack of activity tells it to sleep.
 
 ### Activity threshold
-- `void setActivityThreshold(float newThreshold) // the amount of movement that must take place for it to register as activity and start moving the output value. Defaults to 4.0. (version 1.1+)`
+- `void setActivityThreshold(float newThreshold)`
+
+The amount of movement that must take place for it to register as activity and start moving the output value. Defaults to 4.0. (version 1.1+)
 
 ### Snap multiplier
 - `void setSnapMultiplier(float newMultiplier)`
