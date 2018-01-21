@@ -151,7 +151,9 @@ Sleep allows you to minimise the amount of responsive value changes over time. I
 SnapMultiplier is a value from 0 to 1 that controls the amount of easing. Increase this to lessen the amount of easing (such as 0.1) and make the responsive values more responsive, but doing so may cause more noise to seep through when sleep is not enabled.
 
 ### Edge snapping
-- `void enableEdgeSnap() // edge snap ensures that values at the edges of the spectrum (0 and 1023) can be easily reached when sleep is enabled`
+- `void enableEdgeSnap()` 
+
+Edge snap ensures that values at the edges of the spectrum (0 and 1023) can be easily reached when sleep is enabled
 
 ### Analog resolution
 - `void setAnalogResolution(int resolution)`
