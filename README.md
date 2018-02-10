@@ -108,7 +108,7 @@ void loop() {
 
 ## How to install
 
-In the Arduino IDE, go to Sketch > Include libraries > Manage libraries, and search for ResponsiveAnalogInput.
+In the Arduino IDE, go to Sketch > Include libraries > Manage libraries, and search for ResponsiveAnalogRead.
 You can also just use the files directly from the src folder.
 
 Look at the example in the examples folder for an idea on how to use it in your own projects.
