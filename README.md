@@ -143,7 +143,9 @@ Sleep allows you to minimise the amount of responsive value changes over time. I
 3. It classifies changes in the input voltage as being "active" or not. A lack of activity tells it to sleep.
 
 ### Activity threshold
-- `void setActivityThreshold(float newThreshold) // the amount of movement that must take place for it to register as activity and start moving the output value. Defaults to 4.0. (version 1.1+)`
+- `void setActivityThreshold(float newThreshold)`
+
+The amount of movement that must take place for it to register as activity and start moving the output value. Defaults to 4.0. (version 1.1+)
 
 ### Snap multiplier
 - `void setSnapMultiplier(float newMultiplier)`
@@ -151,7 +153,9 @@ Sleep allows you to minimise the amount of responsive value changes over time. I
 SnapMultiplier is a value from 0 to 1 that controls the amount of easing. Increase this to lessen the amount of easing (such as 0.1) and make the responsive values more responsive, but doing so may cause more noise to seep through when sleep is not enabled.
 
 ### Edge snapping
-- `void enableEdgeSnap() // edge snap ensures that values at the edges of the spectrum (0 and 1023) can be easily reached when sleep is enabled`
+- `void enableEdgeSnap()` 
+
+Edge snap ensures that values at the edges of the spectrum (0 and 1023) can be easily reached when sleep is enabled
 
 ### Analog resolution
 - `void setAnalogResolution(int resolution)`
