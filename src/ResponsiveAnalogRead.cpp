@@ -3,6 +3,7 @@
  * Arduino library for eliminating noise in analogRead inputs without decreasing responsiveness
  *
  * Copyright (c) 2016 Damien Clarke
+ * THIS VERSION MODIFIED BY KATHRYN SCHAFFER
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +27,13 @@
 #include <Arduino.h>
 #include "ResponsiveAnalogRead.h"
 
+
+ResponsiveAnalogRead::ResponsiveAnalogRead(){
+    //do nothing - all actual configuration is done in setup function
+}
+
+
+
 ResponsiveAnalogRead::ResponsiveAnalogRead(int pin, bool sleepEnable, float snapMultiplier)
 {
   pinMode(pin, INPUT ); // ensure button pin is an input
@@ -35,6 +43,19 @@ ResponsiveAnalogRead::ResponsiveAnalogRead(int pin, bool sleepEnable, float snap
   this->sleepEnable = sleepEnable;
   setSnapMultiplier(snapMultiplier);
 }
+
+
+void ResponsiveAnalogRead::setup(int pin, bool sleepEnable, float snapMultiplier){
+    pinMode(pin, INPUT ); // ensure button pin is an input
+    digitalWrite(pin, LOW ); // ensure pullup is off on button pin
+    
+    this->pin = pin;
+    this->sleepEnable = sleepEnable;
+    setSnapMultiplier(snapMultiplier);
+    
+    
+}
+
 
 void ResponsiveAnalogRead::update()
 {
