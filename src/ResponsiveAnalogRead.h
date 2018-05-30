@@ -3,7 +3,6 @@
  * Arduino library for eliminating noise in analogRead inputs without decreasing responsiveness
  *
  * Copyright (c) 2016 Damien Clarke
- * THIS VERSION MODIFIED BY KATHRYN SCHAFFER
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -40,10 +39,10 @@ class ResponsiveAnalogRead
     //   increase this to lessen the amount of easing (such as 0.1) and make the responsive values more responsive
     //   but doing so may cause more noise to seep through if sleep is not enabled
     
-    ResponsiveAnalogRead();  //added a default constructor to enable use as a member variable in a class
+    ResponsiveAnalogRead();  //default constructor must be followed by call to begin function
     ResponsiveAnalogRead(int pin, bool sleepEnable, float snapMultiplier = 0.01);
 
-    void setup(int pin, bool sleepEnable, float snapMultiplier = 0.01);  //setup replaces the original constructor
+    void begin(int pin, bool sleepEnable, float snapMultiplier = 0.01);  // use with default constructor to initialize 
     
     inline int getValue() { return responsiveValue; } // get the responsive value from last update
     inline int getRawValue() { return rawValue; } // get the raw analogRead() value from last update
