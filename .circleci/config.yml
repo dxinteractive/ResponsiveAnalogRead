@@ -12,6 +12,7 @@ jobs:
             - v1-dependencies-{{ checksum "docs/yarn.lock" }}
             - v1-dependencies-
       - run: cd docs && yarn
+      - run: cd docs && yarn jslib-install
       - run: cd docs && yarn build
       - save_cache:
           paths:
