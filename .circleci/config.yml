@@ -15,7 +15,7 @@ jobs:
       - run: yarn build
       - save_cache:
           paths:
-            - docs/site/node_modules
+            - docs/node_modules
           key: v1-dependencies-{{ checksum "yarn.lock" }}
 
       - deploy:
