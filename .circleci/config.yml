@@ -12,13 +12,12 @@ jobs:
             - v1-dependencies-{{ checksum "docs/yarn.lock" }}
             - v1-dependencies-
       - run: cd docs && yarn
-      - run: cd docs && yarn jslib-install
-      - run: cd docs && yarn build
+      - run: cd docs && yarn jslib-install && yarn build
       - save_cache:
           paths:
             - docs/node_modules
-            - docs/jslib/emsdk-portable.tar.gz
-            - docs/jslib/emsdk-portable
+            - docs/emsdk-portable.tar.gz
+            - docs/emsdk-portable
           key: v1-dependencies-{{ checksum "docs/yarn.lock" }}
 
       - deploy:
