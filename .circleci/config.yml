@@ -1,0 +1,26 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/responsive-analog-read-site
+    docker:
+      - image: circleci/node:8
+
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "yarn.lock" }}
+            - v1-dependencies-
+      - run: yarn install
+      - run: yarn build
+      - save_cache:
+          paths:
+            - docs/site/node_modules
+          key: v1-dependencies-{{ checksum "yarn.lock" }}
+
+      - deploy:
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ] || [ "${CIRCLE_BRANCH}" == "release/version-2" ]; then
+              git config --global -l && git config --global user.email circleci@circleci && git config --global user.name CircleCI && cd docs/site && yarn deploy
+            fi
+

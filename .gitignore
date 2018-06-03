@@ -1,0 +1,15 @@
+# Project dependencies
+.cache
+node_modules
+
+# site / gatsby
+/docs/site/public
+
+# emscripten
+/docs/jslib/emsdk-portable
+emsdk-portable.tar.gz
+
+# misc
+*.log.*
+*.log
+.DS_Store

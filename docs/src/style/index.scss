@@ -1,0 +1,26 @@
+@import '~bruce/bruce';
+@include BruceReset;
+@include BruceBoxSizing;
+@import '~dcme-style/lib/all';
+@include DcmeConfig;
+
+
+@include DcmeBase;
+@include DcmeBox;
+@include DcmeText;
+
+/* Red */
+.token.keyword {color: #C55B4E;}
+
+/* Yellow */
+.token.tag {color: #E1AE69;}
+
+/* Green */
+.token.string {color: #86C797;}
+
+/* Blue */
+.token.number {color: #6CA6CE;}
+.token.boolean {color: #6CA6CE;}
+
+
+.token.comment {color: #6D6D6D;}

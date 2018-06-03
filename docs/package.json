@@ -1,0 +1,33 @@
+{
+  "name": "responsive-analog-read-site",
+  "private": true,
+  "description": "responsive-analog-read-site",
+  "version": "0.0.0",
+  "author": "Damien Clarke <dxinteractive@gmail.com>",
+  "dependencies": {
+    "dcme-style": "^0.1.0",
+    "gatsby": "^1.9.247",
+    "gatsby-link": "^1.6.40",
+    "gatsby-plugin-react-helmet": "^2.0.10",
+    "gatsby-plugin-sass": "^1.0.26",
+    "goose-css": "^0.12.0",
+    "numeral": "^2.0.6",
+    "react-async-script-loader": "^0.3.0",
+    "react-helmet": "^5.2.0",
+    "stampy": "^0.39.0",
+    "unmutable": "^0.29.2"
+  },
+  "scripts": {
+    "build": "gatsby build && yarn jslib-build",
+    "deploy": "gatsby build --prefix-paths && yarn jslib-build && gh-pages -d public",
+    "watch": "gatsby develop",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "jslib-install": "./jslib/install-emcc.sh",
+    "jslib-build": "emcc --bind -o ./public/jslib.js ./jslib/bind.cpp"
+  },
+  "devDependencies": {
+    "blueflag-test": "^0.18.1",
+    "bruce": "^5.0.0",
+    "gh-pages": "^1.1.0"
+  }
+}
