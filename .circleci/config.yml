@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/responsive-analog-read
     docker:
-      - image: circleci/node:10
+      - image: blueflag/client-build:0.0.6
 
     steps:
       - checkout
