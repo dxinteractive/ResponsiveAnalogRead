@@ -6,6 +6,3 @@ cd emsdk-portable
 ./emsdk install latest
 ./emsdk activate latest
 source ./emsdk_env.sh
-cd $EMSCRIPTEN
-emcc tests/hello_world.c -s WASM=1  -o hello_world.js
-node hello_world.js
