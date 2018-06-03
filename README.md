@@ -1,6 +1,8 @@
 # ResponsiveAnalogRead
 ![ResponsiveAnalogRead](http://damienclarke.me/content/1-code/3-responsive-analog-read/thumbnail.jpg)
 
+TODO - make that image par of the docs build
+
 Something something version 2.
 
 ## License
