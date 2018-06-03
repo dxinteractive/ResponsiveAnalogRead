@@ -1831,18 +1831,6 @@ browserslist@^3.2.6:
     caniuse-lite "^1.0.30000844"
     electron-to-chromium "^1.3.47"
 
-bruce@^0.12.1:
-  version "0.12.1"
-  resolved "https://registry.yarnpkg.com/bruce/-/bruce-0.12.1.tgz#892cabc010dd7bedf2fa2e0fa0d9dd6647a07342"
-  dependencies:
-    exports-loader "^0.6.2"
-
-bruce@^0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/bruce/-/bruce-0.9.0.tgz#bec3d4a2a13eaddc8c72be6ca398e0b0043d1f9f"
-  dependencies:
-    exports-loader "^0.6.2"
-
 bruce@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/bruce/-/bruce-5.0.0.tgz#0b78b5b13b904d79d4c96d8e0ffbf324f9e2ff35"
@@ -2148,7 +2136,7 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@^2.2.4, classnames@^2.2.5:
+classnames@^2.2.5:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.5.tgz#fb3801d453467649ef3603c7d61a02bd129bde6d"
 
@@ -2749,16 +2737,11 @@ date-time@^2.1.0:
   dependencies:
     time-zone "^1.0.0"
 
-dcme-style@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/dcme-style/-/dcme-style-0.1.0.tgz#4b4c42988248054b9e623697ac9acc0cd8b2493e"
+dcme-style@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/dcme-style/-/dcme-style-0.2.0.tgz#2e5b31c774c40d4643a59f3b7137524767faded0"
   dependencies:
-    bruce "^0.12.1"
-    goose "^0.0.3"
-    goose-css "^0.8.1"
-    moment "^2.18.1"
-    numeral "^2.0.6"
-    prop-types "^15.5.8"
+    goose-css "^0.12.0"
 
 death@^1.0.0:
   version "1.1.0"
@@ -3064,7 +3047,7 @@ electron-to-chromium@^1.2.7, electron-to-chromium@^1.3.47:
   version "1.3.48"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.48.tgz#d3b0d8593814044e092ece2108fc3ac9aea4b900"
 
-element-resize-detector@^1.1.12, element-resize-detector@^1.1.9:
+element-resize-detector@^1.1.12:
   version "1.1.14"
   resolved "https://registry.yarnpkg.com/element-resize-detector/-/element-resize-detector-1.1.14.tgz#af064a0a618a820ad570a95c5eec5b77be0128c1"
   dependencies:
@@ -4419,16 +4402,6 @@ goose-css@^0.12.0:
   dependencies:
     stampy "^0.34.0"
 
-goose-css@^0.8.1:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/goose-css/-/goose-css-0.8.1.tgz#061b458077ae3054ab496310406dda893cbcdf6c"
-  dependencies:
-    stampy "^0.30.0"
-
-goose@^0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/goose/-/goose-0.0.3.tgz#0a5a99d0a5b12497219c6600babf4b99584e1200"
-
 got@^6.7.1:
   version "6.7.1"
   resolved "https://registry.yarnpkg.com/got/-/got-6.7.1.tgz#240cd05785a9a18e561dc1b44b41c763ef1e8db0"
@@ -4801,10 +4774,6 @@ ignore-walk@^3.0.1:
 ignore@^3.3.3:
   version "3.3.8"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-3.3.8.tgz#3f8e9c35d38708a3a7e0e9abb6c73e7ee7707b2b"
-
-immutable@^3.8.1:
-  version "3.8.2"
-  resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.2.tgz#c2439951455bb39913daf281376f1530e104adf3"
 
 immutable@~3.7.6:
   version "3.7.6"
@@ -5887,10 +5856,6 @@ lru-cache@^4.0.1:
     pseudomap "^1.0.2"
     yallist "^2.1.2"
 
-lru-memoize@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/lru-memoize/-/lru-memoize-1.0.2.tgz#f5ae84d288e7d55fec8388ec0bd725621bc815d0"
-
 ltcdr@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/ltcdr/-/ltcdr-2.2.1.tgz#5ab87ad1d4c1dab8e8c08bbf037ee0c1902287cf"
@@ -6192,7 +6157,7 @@ module-not-found-error@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/module-not-found-error/-/module-not-found-error-1.0.1.tgz#cf8b4ff4f29640674d6cdd02b0e3bc523c2bbdc0"
 
-moment@2.x.x, moment@^2.16.0, moment@^2.18.1:
+moment@2.x.x, moment@^2.16.0:
   version "2.22.2"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
 
@@ -7643,7 +7608,7 @@ proxy-addr@~2.0.3:
     forwarded "~0.1.2"
     ipaddr.js "1.6.0"
 
-proxyquire@^1.7.10, proxyquire@^1.7.11:
+proxyquire@^1.7.10:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/proxyquire/-/proxyquire-1.8.0.tgz#02d514a5bed986f04cbb2093af16741535f79edc"
   dependencies:
@@ -7844,16 +7809,6 @@ react-hot-loader@^3.0.0-beta.6:
     redbox-react "^1.3.6"
     source-map "^0.6.1"
 
-react-immutable-proptypes@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/react-immutable-proptypes/-/react-immutable-proptypes-2.1.0.tgz#023d6f39bb15c97c071e9e60d00d136eac5fa0b4"
-
-react-input-autosize@^2.1.2:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/react-input-autosize/-/react-input-autosize-2.2.1.tgz#ec428fa15b1592994fb5f9aa15bb1eb6baf420f8"
-  dependencies:
-    prop-types "^15.5.8"
-
 react-proxy@^3.0.0-alpha.0:
   version "3.0.0-alpha.1"
   resolved "https://registry.yarnpkg.com/react-proxy/-/react-proxy-3.0.0-alpha.1.tgz#4400426bcfa80caa6724c7755695315209fa4b07"
@@ -7882,14 +7837,6 @@ react-router@^4.1.1, react-router@^4.2.0:
     path-to-regexp "^1.7.0"
     prop-types "^15.5.4"
     warning "^3.0.0"
-
-react-select@^1.0.0-rc.4:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/react-select/-/react-select-1.2.1.tgz#a2fe58a569eb14dcaa6543816260b97e538120d1"
-  dependencies:
-    classnames "^2.2.4"
-    prop-types "^15.5.8"
-    react-input-autosize "^2.1.2"
 
 react-side-effect@^1.1.0:
   version "1.1.5"
@@ -9021,23 +8968,6 @@ stackframe@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/stackframe/-/stackframe-1.0.4.tgz#357b24a992f9427cba6b545d96a14ed2cbca187b"
 
-stampy@^0.30.0:
-  version "0.30.0"
-  resolved "https://registry.yarnpkg.com/stampy/-/stampy-0.30.0.tgz#1c366bd713185284549321913c3d4ebedca951ca"
-  dependencies:
-    bruce "^0.9.0"
-    classnames "^2.2.5"
-    element-resize-detector "^1.1.9"
-    immutable "^3.8.1"
-    lru-memoize "^1.0.2"
-    moment "^2.18.1"
-    numeral "^2.0.6"
-    prop-types "^15.5.8"
-    proxyquire "^1.7.11"
-    react-immutable-proptypes "^2.1.0"
-    react-select "^1.0.0-rc.4"
-    url-search-params "^0.7.0"
-
 stampy@^0.34.0:
   version "0.34.0"
   resolved "https://registry.yarnpkg.com/stampy/-/stampy-0.34.0.tgz#0cc642bcffc36cacf3f17a0c7f250041c512b38c"
@@ -9714,10 +9644,6 @@ url-parse@^1.1.8, url-parse@~1.4.0:
   dependencies:
     querystringify "^2.0.0"
     requires-port "^1.0.0"
-
-url-search-params@^0.7.0:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/url-search-params/-/url-search-params-0.7.1.tgz#e4ec5766ca34f1c72a9fb03cfbbe4b4fbc707d20"
 
 url-search-params@^0.9.0:
   version "0.9.0"

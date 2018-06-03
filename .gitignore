@@ -3,7 +3,7 @@
 node_modules
 
 # site / gatsby
-/docs/site/public
+/docs/public
 
 # emscripten
 /docs/jslib/emsdk-portable
