@@ -18,12 +18,14 @@
     "unmutable": "^0.29.2"
   },
   "scripts": {
+    "build-gatsby": "gatsby build",
     "build": "gatsby build && yarn jslib-build",
     "deploy": "gatsby build --prefix-paths && yarn jslib-build && gh-pages -d public",
     "watch": "gatsby develop",
     "test": "echo \"Error: no test specified\" && exit 1",
     "jslib-install": "./jslib/install-emcc.sh",
-    "jslib-build": "emcc --bind -o ./public/jslib.js ./jslib/bind.cpp"
+    "jslib-path": "./jslib/path-emcc.sh",
+    "jslib-build": "./jslib/build.sh"
   },
   "devDependencies": {
     "blueflag-test": "^0.18.1",

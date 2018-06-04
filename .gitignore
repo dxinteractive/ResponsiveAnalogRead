@@ -3,11 +3,11 @@
 node_modules
 
 # site / gatsby
-/docs/public
+/docs/public/*
 
 # emscripten
-/docs/jslib/emsdk-portable
-emsdk-portable.tar.gz
+/docs/emsdk-portable
+/docs/emsdk-portable.tar.gz*
 
 # misc
 *.log.*

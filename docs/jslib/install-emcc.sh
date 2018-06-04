@@ -5,4 +5,3 @@ cd emsdk-portable
 ./emsdk list
 ./emsdk install latest
 ./emsdk activate latest
-source ./emsdk_env.sh
