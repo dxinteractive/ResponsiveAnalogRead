@@ -30,7 +30,7 @@ class ResponsiveAnalogRead
 {
     public:
         ResponsiveAnalogRead() {}
-        inline int hello() { return 2; }
+        inline int hello(int num) { return num * 2; }
 };
 
 #endif

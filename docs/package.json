@@ -12,6 +12,7 @@
     "gatsby-plugin-sass": "^1.0.26",
     "goose-css": "^0.12.0",
     "numeral": "^2.0.6",
+    "parcels-react": "^0.9.0",
     "react-async-script-loader": "^0.3.0",
     "react-helmet": "^5.2.0",
     "stampy": "^0.39.0",
