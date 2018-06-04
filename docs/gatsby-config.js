@@ -1,5 +1,6 @@
 // @flow
 module.exports = {
+    pathPrefix: '/ResponsiveAnalogRead',
     siteMetadata: {
         title: 'ResponsiveAnalogRead'
     },
