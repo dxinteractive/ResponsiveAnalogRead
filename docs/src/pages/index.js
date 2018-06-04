@@ -18,7 +18,7 @@ const Index = (): Node => {
 const Loader = <p>Loading...</p>;
 
 export default composeWith(
-    scriptLoader(['/jslib.js']),
+    scriptLoader(['/jslib.js', '/ResponsiveAnalogRead/jslib.js']),
     PollHock({
         until: () => window && window.Module && window.Module.ResponsiveAnalogRead
     }),
