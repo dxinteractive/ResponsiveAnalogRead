@@ -5,7 +5,7 @@
   "version": "0.0.0",
   "author": "Damien Clarke <dxinteractive@gmail.com>",
   "dependencies": {
-    "dcme-style": "^0.2.0",
+    "dcme-style": "0.3.0",
     "gatsby": "^1.9.247",
     "gatsby-link": "^1.6.40",
     "gatsby-plugin-react-helmet": "^2.0.10",

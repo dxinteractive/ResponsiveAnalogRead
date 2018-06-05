@@ -2741,9 +2741,9 @@ date-time@^2.1.0:
   dependencies:
     time-zone "^1.0.0"
 
-dcme-style@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/dcme-style/-/dcme-style-0.2.0.tgz#2e5b31c774c40d4643a59f3b7137524767faded0"
+dcme-style@0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/dcme-style/-/dcme-style-0.3.0.tgz#501fc21da02697be82ab508f52ee6cb088add176"
   dependencies:
     goose-css "^0.12.0"
 
