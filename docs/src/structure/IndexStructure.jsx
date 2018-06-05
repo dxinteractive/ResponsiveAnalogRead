@@ -8,12 +8,13 @@ import updateIn from 'unmutable/lib/updateIn';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 type Props = {
+    ResponsiveAnalogRead: *,
     state: Parcel
 };
 
 export default class IndexStructure extends React.Component<Props> {
     render(): Node {
-        let {ResponsiveAnalogRead} = window.Module;
+        let {ResponsiveAnalogRead} = this.props;
         let input = this.props.state
             .get('input')
             // WOWWWWW!!!!!! THIS NEEDS SOME WORK AYE!!!!!

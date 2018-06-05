@@ -1,22 +1,36 @@
 // @flow
 import React from 'react';
-import scriptLoader from 'react-async-script-loader';
+import type {Node} from 'react';
 import composeWith from 'unmutable/lib/util/composeWith';
 import {ParcelStateHock} from 'parcels-react';
-
-import PollHock from '../component/PollHock';
 import IndexStructure from '../structure/IndexStructure';
 
-const Loader = <p>Loading...</p>;
+import wasmBinary from '../../wasm/wasm.wasm';
+import wasmJs from '../../wasm/wasm.js';
+
+const ResponsiveAnalogReadHock = () => (Component: ComponentType<*>): ComponentType<*> => {
+    return class ResponsiveAnalogReadHock extends React.Component {
+        constructor(props: *) {
+            super(props);
+            this.state = {ResponsiveAnalogRead: null};
+
+            wasmJs({wasmBinary}).then(({ResponsiveAnalogRead}: *) => {
+                this.setState({ResponsiveAnalogRead});
+            });
+        }
+
+        render(): Node {
+            let {ResponsiveAnalogRead} = this.state;
+            return ResponsiveAnalogRead && <Component
+                {...this.props}
+                ResponsiveAnalogRead={ResponsiveAnalogRead}
+            />;
+        }
+    };
+};
 
 export default composeWith(
-    scriptLoader(['/jslib.js', '/ResponsiveAnalogRead/jslib.js']),
-    PollHock({
-        until: () => window && window.Module && window.Module.ResponsiveAnalogRead
-    }),
-    (Component) => ({isScriptLoaded, done, ...props}: *) => isScriptLoaded && done
-        ? <Component {...props} />
-        : Loader,
+    ResponsiveAnalogReadHock(),
     ParcelStateHock({
         initialValue: () => ({
             input: 0

@@ -11,7 +11,7 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "docs/yarn.lock" }}
             - v1-dependencies-
-      - run: cd docs && yarn && yarn jslib-install
+      - run: cd docs && yarn && yarn install-emcc
       - save_cache:
           paths:
             - docs/node_modules
