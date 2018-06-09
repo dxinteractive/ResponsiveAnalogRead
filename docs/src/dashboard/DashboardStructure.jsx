@@ -3,7 +3,7 @@ import React from 'react';
 import type {Node} from 'react';
 import Parcel, {Action} from 'parcels-react';
 import {Box, Text} from 'dcme-style';
-import IndexLayout from '../react-layout/IndexLayout';
+import DashboardLayout from './DashboardLayout';
 import updateIn from 'unmutable/lib/updateIn';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
@@ -12,7 +12,7 @@ type Props = {
     state: Parcel
 };
 
-export default class IndexStructure extends React.Component<Props> {
+export default class DashboardStructure extends React.Component<Props> {
     render(): Node {
         let {ResponsiveAnalogRead} = this.props;
         let input = this.props.state
@@ -41,6 +41,6 @@ export default class IndexStructure extends React.Component<Props> {
 
         let title = () => <Text element="h1" modifier="sizeGiga">ResponsiveAnalogRead</Text>;
 
-        return <IndexLayout {...({code, desc, graph, title})}/>;
+        return <DashboardLayout {...({code, desc, graph, title})}/>;
     }
 }
