@@ -6,6 +6,9 @@ using namespace emscripten;
 EMSCRIPTEN_BINDINGS(my_class_example) {
   class_<ResponsiveAnalogRead>("ResponsiveAnalogRead")
     .constructor()
-    .function("hello", &ResponsiveAnalogRead::hello)
+    .function("read", &ResponsiveAnalogRead::read)
+    .function("hasChanged", &ResponsiveAnalogRead::hasChanged)
+    .function("raw", &ResponsiveAnalogRead::raw)
+    .function("value", &ResponsiveAnalogRead::value)
   ;
 }

@@ -1,5 +1,5 @@
 /*
- * ResponsiveAnalogRead.h
+ * ResponsiveAnalogRead.cpp
  * Arduino library for reducing noise from analog readings without decreasing responsiveness
  *
  * Copyright (c) 2018 Damien Clarke
@@ -23,19 +23,21 @@
  * SOFTWARE.
 **/
 
-#ifndef RESPONSIVE_ANALOG_READ_H
-#define RESPONSIVE_ANALOG_READ_H
-
 #include <Arduino.h>
 
-class ResponsiveAnalogRead
-{
-    public:
-        ResponsiveAnalogRead() {}
-        void read(int value);
-        bool hasChanged();
-        int raw();
-        int value();
-};
+void ResponsiveAnalogRead::read(int input) {
+    this->input = input;
+    this->output = input;
+}
 
-#endif
+bool ResponsiveAnalogRead::hasChanged() {
+    return true;
+}
+
+int ResponsiveAnalogRead::raw() {
+    return input;
+}
+
+int ResponsiveAnalogRead::value() {
+    return output;
+}
