@@ -32,10 +32,33 @@ class ResponsiveAnalogRead
 {
     public:
         ResponsiveAnalogRead() {}
-        void read(int value);
-        bool hasChanged();
-        int raw();
-        int value();
+
+        void setPin(int pin) {
+            this->pin = pin;
+        }
+
+        void read() {
+            int value = analogRead(this->pin);
+            this->input = value;
+            this->output = value;
+        }
+        //void read(int value);
+        bool hasChanged() {
+            return true;
+        }
+
+        int raw() {
+            return this->input;
+        }
+
+        int value() {
+            return this->output;
+        }
+
+    private:
+        int pin;
+        int input;
+        int output;
 };
 
 #endif

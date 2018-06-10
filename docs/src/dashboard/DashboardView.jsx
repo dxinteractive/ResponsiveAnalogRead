@@ -4,6 +4,7 @@ import type {Node} from 'react';
 import composeWith from 'unmutable/lib/util/composeWith';
 import {ParcelStateHock} from 'parcels-react';
 import DashboardStructure from './DashboardStructure';
+import Simulation from '../simulation/Simulation';
 
 import wasmBinary from '../../wasm/wasm.wasm';
 import wasmJs from '../../wasm/wasm.js';
@@ -12,18 +13,22 @@ const ResponsiveAnalogReadHock = () => (Component: ComponentType<*>): ComponentT
     return class ResponsiveAnalogReadHock extends React.Component {
         constructor(props: *) {
             super(props);
-            this.state = {ResponsiveAnalogRead: null};
+            this.state = {
+                simulation: null
+            };
 
-            wasmJs({wasmBinary}).then(({ResponsiveAnalogRead}: *) => {
-                this.setState({ResponsiveAnalogRead});
+            wasmJs({wasmBinary}).then((module: *) => {
+                this.setState({
+                    simulation: new Simulation(module)
+                });
             });
         }
 
         render(): Node {
-            let {ResponsiveAnalogRead} = this.state;
-            return ResponsiveAnalogRead && <Component
+            let {simulation} = this.state;
+            return simulation && <Component
                 {...this.props}
-                ResponsiveAnalogRead={ResponsiveAnalogRead}
+                simulation={simulation}
             />;
         }
     };

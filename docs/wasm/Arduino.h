@@ -1,6 +1,32 @@
-// fake Arduino.h!
-// https://kripken.github.io/emscripten-site/docs/porting/connecting_cpp_and_javascript/embind.html#embind-val-guide
+#ifndef STUBBED_ARDUINO_H
+#define STUBBED_ARDUINO_H
+
+//
+// setters to be called from Javascript
+//
+
+unsigned long _millis;
+
+void setMillis(unsigned long millis) {
+    _millis = millis;
+}
+
+int _analogReadValue;
+
+void setAnalogReadValue(int value) {
+    _analogReadValue = value;
+}
+
+//
+// fake arduino.h functions
+//
 
 unsigned long millis() {
-    return 1;
+    return _millis;
 }
+
+int analogRead(int pin) {
+    return _analogReadValue;
+}
+
+#endif

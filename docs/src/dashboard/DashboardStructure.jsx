@@ -1,11 +1,11 @@
 // @flow
 import React from 'react';
 import type {Node} from 'react';
-import Parcel, {Action} from 'parcels-react';
+import Parcel from 'parcels-react';
 import {Box, Text} from 'dcme-style';
 import DashboardLayout from './DashboardLayout';
-import updateIn from 'unmutable/lib/updateIn';
-import pipeWith from 'unmutable/lib/util/pipeWith';
+// import updateIn from 'unmutable/lib/updateIn';
+// import pipeWith from 'unmutable/lib/util/pipeWith';
 
 type Props = {
     ResponsiveAnalogRead: *,
@@ -14,26 +14,27 @@ type Props = {
 
 export default class DashboardStructure extends React.Component<Props> {
     render(): Node {
-        let {ResponsiveAnalogRead} = this.props;
-        let input = this.props.state
-            .get('input')
-            // WOWWWWW!!!!!! THIS NEEDS SOME WORK AYE!!!!!
-            .modifyChange(({parcel, actions}) => parcel.dispatch(
-                actions.map((action: Action): Action => {
-                    if(action.keyPath.length > 0 || action.type !== "set") {
-                        return action;
-                    }
-                    return pipeWith(
-                        action.toJS(),
-                        updateIn(['payload', 'value'], value => Number(value.replace(/[^\d]/g, ""))),
-                        ii => new Action(ii)
-                    );
-                })
-            ));
+        // let {ResponsiveAnalogRead} = this.props;
+        // let input = this.props.state
+        //     .get('input')
+        //     // WOWWWWW!!!!!! THIS NEEDS SOME WORK AYE!!!!!
+        //     .modifyChange(({parcel, actions}) => parcel.dispatch(
+        //         actions.map((action: Action): Action => {
+        //             if(action.keyPath.length > 0 || action.type !== "set") {
+        //                 return action;
+        //             }
+        //             return pipeWith(
+        //                 action.toJS(),
+        //                 updateIn(['payload', 'value'], value => Number(value.replace(/[^\d]/g, ""))),
+        //                 ii => new Action(ii)
+        //             );
+        //         })
+        //     ));
 
-        let analog = new ResponsiveAnalogRead();
+        // let analog = new ResponsiveAnalogRead();
+        // console.log("analog", analog);
 
-        let code = () => <Box>code <input className="Input" {...input.spreadDOM()}/> double: {analog.hello(input.value())}</Box>;
+        let code = () => <Box>code</Box>;
 
         let desc = () => <Box>desc</Box>;
 
