@@ -11,7 +11,7 @@ type Props = {
     title: () => Node
 };
 
-export default ({code, desc, graph, title}: Props): Node => <Box>
+export default ({code, desc, graph, title}: Props): Node => <Box modifier="inverted flood">
     <Box modifier="padding">{title()}</Box>
     <Grid>
         <Column modifier="5 padding">

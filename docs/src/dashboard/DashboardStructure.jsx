@@ -40,7 +40,7 @@ export default class DashboardStructure extends React.Component<Props> {
 
         let graph = () => <Box>graph</Box>;
 
-        let title = () => <Text element="h1" modifier="sizeGiga">ResponsiveAnalogRead</Text>;
+        let title = () => <Text element="h1" modifier="monospace">ResponsiveAnalogRead</Text>;
 
         return <DashboardLayout {...({code, desc, graph, title})}/>;
     }
