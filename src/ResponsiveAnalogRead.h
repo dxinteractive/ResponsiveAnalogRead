@@ -33,14 +33,34 @@ class ResponsiveAnalogRead
     public:
         ResponsiveAnalogRead() {}
 
+        int pin() {
+            return _pin;
+        }
+
         void setPin(int pin) {
-            this->pin = pin;
+            _pin = pin;
+        }
+
+        int min() {
+            return _min;
+        }
+
+        void setMin(int min) {
+            _min = min;
+        }
+
+        int max() {
+            return _max;
+        }
+
+        void setMax(int max) {
+            _max = max;
         }
 
         void read() {
-            int value = analogRead(this->pin);
-            this->input = value;
-            this->output = value;
+            int value = analogRead(_pin);
+            _input = value;
+            _output = value;
         }
         //void read(int value);
         bool hasChanged() {
@@ -48,17 +68,19 @@ class ResponsiveAnalogRead
         }
 
         int raw() {
-            return this->input;
+            return _input;
         }
 
         int value() {
-            return this->output;
+            return _output;
         }
 
     private:
-        int pin;
-        int input;
-        int output;
+        int _pin;
+        int _min = 0;
+        int _max = 1023;
+        int _input;
+        int _output;
 };
 
 #endif

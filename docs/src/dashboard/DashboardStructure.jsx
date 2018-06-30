@@ -1,20 +1,22 @@
 // @flow
 import React from 'react';
 import type {Node} from 'react';
+import type Simulation from '../simulation/Simulation';
 import Parcel from 'parcels-react';
 import {Box, Text} from 'dcme-style';
 import DashboardLayout from './DashboardLayout';
+import GraphView from '../graph/GraphView';
 // import updateIn from 'unmutable/lib/updateIn';
 // import pipeWith from 'unmutable/lib/util/pipeWith';
 
 type Props = {
-    ResponsiveAnalogRead: *,
-    state: Parcel
+    simulation: Simulation,
+    stateParcel: Parcel
 };
 
 export default class DashboardStructure extends React.Component<Props> {
     render(): Node {
-        // let {ResponsiveAnalogRead} = this.props;
+        let {simulation} = this.props;
         // let input = this.props.state
         //     .get('input')
         //     // WOWWWWW!!!!!! THIS NEEDS SOME WORK AYE!!!!!
@@ -38,7 +40,9 @@ export default class DashboardStructure extends React.Component<Props> {
 
         let desc = () => <Box>desc</Box>;
 
-        let graph = () => <Box>graph</Box>;
+        let graph = () => <Box style={{height: 300}}>
+            <GraphView simulation={simulation} />
+        </Box>;
 
         let title = () => <Text element="h1" modifier="monospace">ResponsiveAnalogRead</Text>;
 
