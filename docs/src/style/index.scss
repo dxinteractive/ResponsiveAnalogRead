@@ -11,6 +11,11 @@
 @include DcmeInput;
 @include DcmeText;
 
+@import '../dashboard/Dashboard';
+@import '../control/Control';
+@include ResponsiveAnalogReadDashboard;
+@include ResponsiveAnalogReadControl;
+
 /* Red */
 .token.keyword {color: #C55B4E;}
 

@@ -9,16 +9,21 @@ type SimulationConfig = {
 
 let i = 512;
 
+const DEFAULT_STATE = {
+    delay: 100,
+    input: 0,
+    running: true
+};
+
 export default class Simulation {
     _ResponsiveAnalogRead: * = null;
     _analog: * = null;
     _bufferMap: Map<Array<SimulationTick>> = new Map();
-    _delay: number = 10;
-    _running: boolean = true;
     _startTime: Date = Date.now();
     _setAnalogReadValue: Function = null;
     _setMillis: Function = null;
 
+    state: * = DEFAULT_STATE;
     ticks: number = 0;
 
     constructor({ResponsiveAnalogRead, setMillis, setAnalogReadValue}: SimulationConfig) {
@@ -32,15 +37,23 @@ export default class Simulation {
         return this._analog;
     };
 
+    setState = (newState: *) => {
+        // TODO control running from here
+        this.state = {
+            ...this.state,
+            ...newState
+        };
+    };
+
     start = () => {
         this._analog = new this._ResponsiveAnalogRead();
-        this._running = true;
+        this.state.running = true;
         this._startTime = Date.now();
         this.tick();
     };
 
     stop = () => {
-        this._running = false;
+        this.state.running = false;
     };
 
     addBuffer = (name: string) => {
@@ -54,12 +67,13 @@ export default class Simulation {
     };
 
     tick = () => {
-        if(this._running) {
+        if(this.state.running) {
             this._setMillis(Date.now() - this._startTime);
-            if(Math.random() > 0.4) {
-                i += Math.random() * 100 - 50;
-            }
-            this._setAnalogReadValue(Math.floor(i));
+            // if(Math.random() > 0.4) {
+            //     i += Math.random() * 100 - 50;
+            // }
+            console.log(this.state.input);
+            this._setAnalogReadValue(this.state.input);
             this.loop();
             this.ticks++;
         }
@@ -77,7 +91,7 @@ export default class Simulation {
         });
 
         // delay() equivalent
-        setTimeout(this.tick, this._delay);
+        setTimeout(this.tick, this.state.delay);
     };
 }
 
