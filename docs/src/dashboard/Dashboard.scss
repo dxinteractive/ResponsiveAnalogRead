@@ -1,0 +1,19 @@
+@mixin ResponsiveAnalogReadDashboard($name: 'Dashboard') {
+    .#{$name} {
+
+        color: color('invertedCopy');
+        background-color: color('invertedBackground');
+        min-height: 100%;
+        width: 100%;
+
+        &_title {
+            height: 2rem;
+        }
+
+        &_control {
+            height: 50vh;
+        }
+
+        @content;
+    }
+}

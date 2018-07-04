@@ -1,0 +1,38 @@
+{
+  "name": "responsive-analog-read-site",
+  "private": true,
+  "description": "responsive-analog-read-site",
+  "version": "0.0.0",
+  "author": "Damien Clarke <dxinteractive@gmail.com>",
+  "dependencies": {
+    "dcme-style": "0.3.0",
+    "gatsby": "^1.9.247",
+    "gatsby-link": "^1.6.40",
+    "gatsby-plugin-react-helmet": "^2.0.10",
+    "gatsby-plugin-sass": "^1.0.26",
+    "goose-css": "^0.12.0",
+    "numeral": "^2.0.6",
+    "parcels-react": "^0.9.0",
+    "react-animation-frame": "^1.0.1",
+    "react-helmet": "^5.2.0",
+    "react-rangeslider": "^2.2.0",
+    "stampy": "^0.39.0",
+    "unmutable": "^0.29.2"
+  },
+  "scripts": {
+    "build-gatsby": "gatsby build",
+    "build": "yarn wasm-build && gatsby build",
+    "deploy": "yarn wasm-build && gatsby build --prefix-paths && gh-pages -d public",
+    "watch": "yarn wasm-build && gatsby develop",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install-emcc": "./wasm/install-emcc.sh",
+    "path-emcc": "./wasm/path-emcc.sh",
+    "wasm-build": "./wasm/build.sh"
+  },
+  "devDependencies": {
+    "blueflag-test": "^0.18.1",
+    "bruce": "^5.0.0",
+    "buffer-loader": "^0.0.1",
+    "gh-pages": "^1.1.0"
+  }
+}
