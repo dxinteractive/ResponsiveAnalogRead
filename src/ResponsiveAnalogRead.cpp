@@ -26,23 +26,6 @@
 #include <Arduino.h>
 #include "ResponsiveAnalogRead.h"
 
-
-ResponsiveAnalogRead::ResponsiveAnalogRead(){
-    //do nothing - all actual configuration is done in begin() function
-}
-
-
-ResponsiveAnalogRead::ResponsiveAnalogRead(int pin, bool sleepEnable, float snapMultiplier)
-{
-  pinMode(pin, INPUT ); // ensure button pin is an input
-  digitalWrite(pin, LOW ); // ensure pullup is off on button pin
-
-  this->pin = pin;
-  this->sleepEnable = sleepEnable;
-  setSnapMultiplier(snapMultiplier);
-}
-
-
 void ResponsiveAnalogRead::begin(int pin, bool sleepEnable, float snapMultiplier){
     pinMode(pin, INPUT ); // ensure button pin is an input
     digitalWrite(pin, LOW ); // ensure pullup is off on button pin

@@ -39,8 +39,10 @@ class ResponsiveAnalogRead
     //   increase this to lessen the amount of easing (such as 0.1) and make the responsive values more responsive
     //   but doing so may cause more noise to seep through if sleep is not enabled
     
-    ResponsiveAnalogRead();  //default constructor must be followed by call to begin function
-    ResponsiveAnalogRead(int pin, bool sleepEnable, float snapMultiplier = 0.01);
+    ResponsiveAnalogRead(){};  //default constructor must be followed by call to begin function
+    ResponsiveAnalogRead(int pin, bool sleepEnable, float snapMultiplier = 0.01){
+        begin(pin, sleepEnable, snapMultiplier);
+    };
 
     void begin(int pin, bool sleepEnable, float snapMultiplier = 0.01);  // use with default constructor to initialize 
     
