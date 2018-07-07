@@ -1,9 +1,9 @@
 // @flow
-import React from 'react';
 import type {Node} from 'react';
 import type Parcel from 'parcels-react';
-import Simulation from '../simulation/Simulation';
+import type {WasmExports} from '../types/types';
 
+import React from 'react';
 import wasmBinary from '../../wasm/wasm.wasm';
 import wasmJs from '../../wasm/wasm.js';
 
@@ -11,44 +11,44 @@ type Props = {
     stateParcel: Parcel
 };
 
-export default () => (Component: ComponentType<Props>): ComponentType<Props> => {
-    return class ResponsiveAnalogReadHock extends React.Component<Props> {
-        simulation: ?Simulation;
+type State = {
+    wasmExports: ?WasmExports
+};
 
+export default () => (Component: ComponentType<Props>): ComponentType<Props> => {
+    return class ResponsiveAnalogReadHock extends React.Component<Props, State> {
         constructor(props: *) {
             super(props);
             this.state = {
-                loaded: false
+                wasmExports: null
             };
 
-            wasmJs({wasmBinary}).then((module: *) => {
-                this.simulation = new Simulation(module);
-                this.updateSimulationProps(props);
+            wasmJs({wasmBinary}).then((wasmExports: *) => {
                 this.setState({
-                    loaded: true
+                    wasmExports
                 });
             });
         }
 
-        componentWillReceiveProps(nextProps: Props) {
-            this.updateSimulationProps(nextProps);
-        }
+        // componentWillReceiveProps(nextProps: Props) {
+        //     this.updateSimulationProps(nextProps);
+        // }
 
-        updateSimulationProps(props: Props) {
-            if(!this.simulation) {
-                return;
-            }
-            let input = props.stateParcel.get('input').value();
-            this.simulation.setState({
-                input
-            });
-        }
+        // updateSimulationProps(props: Props) {
+        //     if(!this.simulation) {
+        //         return;
+        //     }
+        //     let input = props.stateParcel.get('input').value();
+        //     this.simulation.setState({
+        //         input
+        //     });
+        // }
 
         render(): Node {
-            let {loaded} = this.state;
-            return loaded && <Component
+            let {wasmExports} = this.state;
+            return wasmExports && <Component
                 {...this.props}
-                simulation={this.simulation}
+                wasmExports={wasmExports}
             />;
         }
     };

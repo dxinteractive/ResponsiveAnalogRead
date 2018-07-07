@@ -1,3 +1,3 @@
 // @flow
-import DemoView from '../demo/DemoView';
-export default DemoView;
+import IndexView from '../index/IndexView';
+export default IndexView;

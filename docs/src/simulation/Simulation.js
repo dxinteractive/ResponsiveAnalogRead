@@ -7,8 +7,6 @@ type SimulationConfig = {
     setMillis: Function
 };
 
-let i = 512;
-
 const DEFAULT_STATE = {
     delay: 100,
     input: 0,
