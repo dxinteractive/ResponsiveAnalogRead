@@ -1,3 +1,3 @@
 // @flow
-import DashboardView from '../dashboard/DashboardView';
-export default DashboardView;
+import DemoView from '../demo/DemoView';
+export default DemoView;

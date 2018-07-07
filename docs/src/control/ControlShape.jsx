@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import type {Node} from 'react';
-import {Column, Grid} from 'dcme-style';
+import {GridItem, Grid} from 'dcme-style';
 import SpruceClassName from 'stampy/lib/util/SpruceClassName';
 
 export default (props: *): Node => {
@@ -19,13 +19,13 @@ export default (props: *): Node => {
     const parentClassName = SpruceClassName({className, modifier, name});
 
     return <Grid className={parentClassName} {...otherProps}>
-        <Column className={`${name}_graph`} modifier="9">{graph()}</Column>
-        <Column className={`${name}_sliders`} modifier="3">
+        <GridItem className={`${name}_graph`} modifier="9">{graph()}</GridItem>
+        <GridItem className={`${name}_sliders`} modifier="3">
             <Grid>
-                <Column modifier="4">{inputSlider()}</Column>
-                <Column modifier="4">{rawSlider()}</Column>
-                <Column modifier="4">{smoothSlider()}</Column>
+                <GridItem modifier="4">{inputSlider()}</GridItem>
+                <GridItem modifier="4">{rawSlider()}</GridItem>
+                <GridItem modifier="4">{smoothSlider()}</GridItem>
             </Grid>
-        </Column>
+        </GridItem>
     </Grid>;
 };

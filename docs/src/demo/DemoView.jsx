@@ -1,15 +1,15 @@
 // @flow
 import composeWith from 'unmutable/lib/util/composeWith';
 import {ParcelStateHock} from 'parcels-react';
-import DashboardStructure from './DashboardStructure';
-import DashboardState from './DashboardState';
+import DemoState from './DemoState';
+import DemoStructure from './DemoStructure';
 import ResponsiveAnalogReadHock from '../simulation/ResponsiveAnalogReadHock';
 
 export default composeWith(
     ParcelStateHock({
-        initialValue: () => DashboardState(),
+        initialValue: () => DemoState(),
         prop: "stateParcel"
     }),
     ResponsiveAnalogReadHock(),
-    DashboardStructure
+    DemoStructure
 );

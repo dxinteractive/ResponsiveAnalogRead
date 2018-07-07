@@ -7,9 +7,6 @@ import {PureParcel} from 'parcels-react';
 import GraphView from '../graph/GraphView';
 import ControlShape from './ControlShape';
 
-import Slider from 'react-rangeslider';
-import 'react-rangeslider/lib/index.css';
-
 type Props = {
     eqHeight: ?number,
     simulation: Simulation,
@@ -41,14 +38,17 @@ export default class ControlStructure extends React.Component<Props> {
         let min = inputMin.value();
         let max = inputMax.value();
 
-        return <PureParcel parcel={input} forceUpdate={[min, max]}>
-            {(parcel) => <Slider
-                {...parcel.spread()}
-                min={min}
-                max={max}
-                orientation="vertical"
-            />}
-        </PureParcel>;
+        return <div>asd</div>;
+
+// rc-slider
+        // return <PureParcel parcel={input} forceUpdate={[min, max]}>
+        //     {(parcel) => <Slider
+        //         {...parcel.spread()}
+        //         min={min}
+        //         max={max}
+        //         orientation="vertical"
+        //     />}
+        // </PureParcel>;
     };
 
     rawSlider = (): Node => {

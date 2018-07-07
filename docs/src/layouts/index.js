@@ -4,7 +4,7 @@ import type {Node} from 'react';
 import Helmet from 'react-helmet';
 
 import {Head} from 'dcme-style';
-import '../style/index.scss';
+import './style.scss';
 
 export default ({children, data}: Object): Node => <div>
     <Helmet>
