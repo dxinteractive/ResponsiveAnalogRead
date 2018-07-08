@@ -1,18 +1,21 @@
 // @flow
 
 export default class SimulationTick {
-    value: number;
+    input: number;
     raw: number;
+    output: number;
 
     constructor(props: *) {
-        this.value = props.value;
+        this.input = props.input;
         this.raw = props.raw;
+        this.output = props.output;
     }
 
     toJS(): * {
         return {
-            value: this.value,
-            raw: this.raw
+            input: this.input,
+            raw: this.raw,
+            output: this.output
         };
     }
 }

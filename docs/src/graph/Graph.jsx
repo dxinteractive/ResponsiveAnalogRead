@@ -12,13 +12,17 @@ import update from 'unmutable/lib/update';
 import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
+import {Colors} from 'dcme-style';
+
 type DataPoint = {
-    value: number,
+    output: number,
+    input: number,
     raw: number,
     x: number
 };
 
 type Props = {
+    height: number,
     eqWidth: ?number,
     simulation: Simulation
 };
@@ -36,6 +40,7 @@ let range = (start: number, end: number, step: number = 1): Array<number> => {
 };
 
 const BUFFER_NAME = 'graph';
+const DATA_POINTS = 100;
 
 export default class Graph extends React.Component<Props, State> {
 
@@ -44,10 +49,11 @@ export default class Graph extends React.Component<Props, State> {
         props.simulation.addBuffer(BUFFER_NAME);
         this.state = {
             data: pipeWith(
-                range(0,100),
+                range(0,DATA_POINTS),
                 map(x => ({
                     x,
-                    value: null,
+                    input: null,
+                    output: null,
                     raw: null
                 }))
             )
@@ -65,20 +71,25 @@ export default class Graph extends React.Component<Props, State> {
         this.setState(
             update('data', pipe(
                 concat(buffer.map(_ => _.toJS())),
-                takeLast(100),
+                takeLast(DATA_POINTS),
                 map((data, x) => ({...data, x}))
             ))
         );
     }
 
     render(): Node {
-        let {eqWidth} = this.props;
+        let {eqWidth, height} = this.props;
         let {data} = this.state;
 
         return <VictoryChart
             domain={{y: [400, 600]}}
-            height={300}
+            height={height}
             width={eqWidth}
+            style={{
+                labels: {
+                    fontFamily: `"Roboto Mono", monospace`
+                }
+            }}
             theme={VictoryTheme.material}
             padding={{left: 60}}
         >
@@ -86,11 +97,24 @@ export default class Graph extends React.Component<Props, State> {
             <VictoryAxis dependentAxis />
             <VictoryLine
                 style={{
-                    data: {stroke: "#c43a31"},
-                    parent: {border: "1px solid #ccc"}
+                    data: {stroke: Colors.tertiary}
                 }}
                 data={data}
-                y="value"
+                y="input"
+            />
+            <VictoryLine
+                style={{
+                    data: {stroke: Colors.secondary}
+                }}
+                data={data}
+                y="raw"
+            />
+            <VictoryLine
+                style={{
+                    data: {stroke: Colors.primary}
+                }}
+                data={data}
+                y="output"
             />
         </VictoryChart>;
     }

@@ -8,17 +8,18 @@ type SimulationConfig = {
 };
 
 const DEFAULT_STATE = {
-    delay: 30,
+    delay: 20,
     input: 0,
-    running: true
+    running: true,
+    min: 0,
+    max: 1023
 };
-
-let i = 512;
 
 export default class Simulation {
     _ResponsiveAnalogRead: * = null;
     _analog: * = null;
     _bufferMap: Map<Array<SimulationTick>> = new Map();
+    _onTickListeners: Array<Function> = [];
     _startTime: Date = Date.now();
     _setAnalogReadValue: Function = null;
     _setMillis: Function = null;
@@ -43,6 +44,10 @@ export default class Simulation {
             ...this.state,
             ...newState
         };
+    };
+
+    addOnTickListener = (onTick: Function) => {
+        this._onTickListeners.push(onTick);
     };
 
     start = () => {
@@ -70,10 +75,10 @@ export default class Simulation {
         if(this.state.running) {
             this._setMillis(Date.now() - this._startTime);
             let {input} = this.state;
-            if(Math.random() > 0.4) {
-                i += Math.random() * 6 - 3;
-            }
-            this._setAnalogReadValue(i);
+            let noise = (Math.random() - 0.5) * 10;
+            let read = Math.round(input + noise);
+            read = Math.min(this.state.max, Math.max(this.state.min, read));
+            this._setAnalogReadValue(read);
             this.loop();
             this.ticks++;
         }
@@ -82,12 +87,19 @@ export default class Simulation {
     loop = () => {
         this._analog.read();
         let tick = new SimulationTick({
-            value: this._analog.value(),
-            raw: this._analog.raw()
+            input: this.state.input,
+            raw: this._analog.raw(),
+            output: this._analog.value()
         });
+
+        console.log("tick", tick);
 
         this._bufferMap.forEach((buffer: Array<SimulationTick>) => {
             buffer.push(tick);
+        });
+
+        this._onTickListeners.forEach((onTick: Function) => {
+            onTick(tick);
         });
 
         // delay() equivalent

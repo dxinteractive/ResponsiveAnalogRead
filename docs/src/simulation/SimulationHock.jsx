@@ -3,6 +3,7 @@
 import type {Node} from 'react';
 import type Parcel from 'parcels-react';
 import type {WasmExports} from '../types/types';
+import type SimulationTick from './SimulationTick';
 
 import React from 'react';
 import Simulation from './Simulation';
@@ -19,6 +20,7 @@ export default () => (Component: ComponentType<Props>): ComponentType<Props> => 
         constructor(props: Props) {
             super(props);
             this.simulation = new Simulation(props.wasmExports);
+            this.simulation.addOnTickListener(this.handleTick);
             this.updateSimulationProps(props);
         }
 
@@ -32,6 +34,13 @@ export default () => (Component: ComponentType<Props>): ComponentType<Props> => 
                 input
             });
         }
+
+        handleTick = (tick: SimulationTick) => {
+            this.props.demoParcel.batch((parcel: Parcel) => {
+                parcel.set('output', tick.output);
+                parcel.set('raw', tick.raw);
+            });
+        };
 
         render(): Node {
             return <Component
