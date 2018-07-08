@@ -2,16 +2,17 @@
 import type {ComponentType} from 'react';
 import type {Node} from 'react';
 import type Parcel from 'parcels-react';
-import type {WasmExports} from '../types/types';
+import type Simulation from '../simulation/Simulation';
 
 import React from 'react';
 import {Box, Grid, GridItem} from 'dcme-style';
 import Structure from '../component/Structure';
+import GraphView from '../graph/GraphView';
 
 type Props = {
     demoParcel: Parcel,
     layout?: ComponentType,
-    wasmExports: WasmExports
+    simulation: Simulation
 };
 
 type LayoutProps = {
@@ -45,7 +46,8 @@ export default class DemoStructure extends Structure<Props> {
     };
 
     graph = (): Node => {
-        return <p>graph</p>;
+        let {simulation} = this.props;
+        return <GraphView simulation={simulation} />;
     };
 
     settings = (): Node => {

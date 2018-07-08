@@ -8,10 +8,12 @@ type SimulationConfig = {
 };
 
 const DEFAULT_STATE = {
-    delay: 100,
+    delay: 30,
     input: 0,
     running: true
 };
+
+let i = 512;
 
 export default class Simulation {
     _ResponsiveAnalogRead: * = null;
@@ -67,11 +69,11 @@ export default class Simulation {
     tick = () => {
         if(this.state.running) {
             this._setMillis(Date.now() - this._startTime);
-            // if(Math.random() > 0.4) {
-            //     i += Math.random() * 100 - 50;
-            // }
-            console.log(this.state.input);
-            this._setAnalogReadValue(this.state.input);
+            let {input} = this.state;
+            if(Math.random() > 0.4) {
+                i += Math.random() * 6 - 3;
+            }
+            this._setAnalogReadValue(i);
             this.loop();
             this.ticks++;
         }

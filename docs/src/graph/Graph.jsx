@@ -3,76 +3,95 @@ import React from 'react';
 import type {Node} from 'react';
 import type Simulation from '../simulation/Simulation';
 import type SimulationTick from '../simulation/SimulationTick';
-import Line from './Line';
+import {VictoryAxis, VictoryChart, VictoryTheme, VictoryLine} from 'victory';
+
+import concat from 'unmutable/lib/concat';
+import map from 'unmutable/lib/map';
+import takeLast from 'unmutable/lib/takeLast';
+import update from 'unmutable/lib/update';
+import pipe from 'unmutable/lib/util/pipe';
+import pipeWith from 'unmutable/lib/util/pipeWith';
+
+type DataPoint = {
+    value: number,
+    raw: number,
+    x: number
+};
 
 type Props = {
     eqWidth: ?number,
-    eqHeight: ?number,
     simulation: Simulation
+};
+
+type State = {
+    data: Array<DataPoint>
+};
+
+let range = (start: number, end: number, step: number = 1): Array<number> => {
+    let arr = [];
+    for(var i = start; i < end; i += step) {
+        arr.push(i);
+    }
+    return arr;
 };
 
 const BUFFER_NAME = 'graph';
 
-export default class Graph extends React.Component<Props> {
-    canvas: ?HTMLElement;
-    lineValue: Line = new Line();
-    lineRaw: Line = new Line();
+export default class Graph extends React.Component<Props, State> {
 
     constructor(props: Props) {
         super(props);
         props.simulation.addBuffer(BUFFER_NAME);
+        this.state = {
+            data: pipeWith(
+                range(0,100),
+                map(x => ({
+                    x,
+                    value: null,
+                    raw: null
+                }))
+            )
+        };
     }
 
     onAnimationFrame() {
-        if(!this.canvas || !this.canvas.getContext) {
+        let {simulation} = this.props;
+
+        let buffer: Array<SimulationTick> = simulation.flushBuffer(BUFFER_NAME);
+        if(buffer.length === 0) {
             return;
         }
 
-        let {simulation} = this.props;
-
-        let context = this.canvas.getContext('2d');
-        //let min = simulation.analog().min();
-        //let max = simulation.analog().max();
-        let scale = 2;
-
-        simulation
-            .flushBuffer(BUFFER_NAME)
-            .forEach(({value, raw}: SimulationTick) => {
-                let imageData = context.getImageData(scale, 0, this.canvas.width - scale, this.canvas.height);
-                context.putImageData(imageData, 0, 0);
-
-
-                this.lineValue.to(value >> 3);
-                this.lineRaw.to(raw >> 3);
-
-                context.fillStyle = '#FF0000';
-                context.fillRect(
-                    this.canvas.width - 10,
-                    this.lineValue.min * scale,
-                    scale,
-                    this.lineValue.height * scale
-                );
-
-                context.fillStyle = '#0000FF';
-                context.fillRect(
-                    this.canvas.width - 10,
-                    this.lineRaw.min * scale,
-                    scale,
-                    this.lineRaw.height * scale
-                );
-            });
+        this.setState(
+            update('data', pipe(
+                concat(buffer.map(_ => _.toJS())),
+                takeLast(100),
+                map((data, x) => ({...data, x}))
+            ))
+        );
     }
 
     render(): Node {
-        let {eqWidth, eqHeight} = this.props;
-        if(!eqWidth || !eqHeight) {
-            return null;
-        }
+        let {eqWidth} = this.props;
+        let {data} = this.state;
 
-        return <canvas
-            ref={ref => this.canvas = ref}
+        return <VictoryChart
+            domain={{y: [400, 600]}}
+            height={300}
             width={eqWidth}
-            height={eqHeight}
-        />;
+            theme={VictoryTheme.material}
+            padding={{left: 60}}
+        >
+            <VictoryAxis />
+            <VictoryAxis dependentAxis />
+            <VictoryLine
+                style={{
+                    data: {stroke: "#c43a31"},
+                    parent: {border: "1px solid #ccc"}
+                }}
+                data={data}
+                y="value"
+            />
+        </VictoryChart>;
     }
 }

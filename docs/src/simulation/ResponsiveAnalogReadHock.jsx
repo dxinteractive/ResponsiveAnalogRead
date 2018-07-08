@@ -1,15 +1,12 @@
 // @flow
 import type {Node} from 'react';
-import type Parcel from 'parcels-react';
 import type {WasmExports} from '../types/types';
 
 import React from 'react';
 import wasmBinary from '../../wasm/wasm.wasm';
 import wasmJs from '../../wasm/wasm.js';
 
-type Props = {
-    stateParcel: Parcel
-};
+type Props = {};
 
 type State = {
     wasmExports: ?WasmExports
@@ -17,7 +14,7 @@ type State = {
 
 export default () => (Component: ComponentType<Props>): ComponentType<Props> => {
     return class ResponsiveAnalogReadHock extends React.Component<Props, State> {
-        constructor(props: *) {
+        constructor(props: Props) {
             super(props);
             this.state = {
                 wasmExports: null
@@ -29,20 +26,6 @@ export default () => (Component: ComponentType<Props>): ComponentType<Props> => 
                 });
             });
         }
-
-        // componentWillReceiveProps(nextProps: Props) {
-        //     this.updateSimulationProps(nextProps);
-        // }
-
-        // updateSimulationProps(props: Props) {
-        //     if(!this.simulation) {
-        //         return;
-        //     }
-        //     let input = props.stateParcel.get('input').value();
-        //     this.simulation.setState({
-        //         input
-        //     });
-        // }
 
         render(): Node {
             let {wasmExports} = this.state;

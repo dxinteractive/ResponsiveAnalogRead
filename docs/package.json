@@ -26,7 +26,8 @@
     "react-animation-frame": "^1.0.1",
     "react-helmet": "^5.2.0",
     "stampy": "^0.39.0",
-    "unmutable": "^0.29.2"
+    "unmutable": "^0.29.2",
+    "victory": "^0.27.2"
   },
   "scripts": {
     "build-gatsby": "gatsby build",

@@ -8,4 +8,11 @@ export default class SimulationTick {
         this.value = props.value;
         this.raw = props.raw;
     }
+
+    toJS(): * {
+        return {
+            value: this.value,
+            raw: this.raw
+        };
+    }
 }
