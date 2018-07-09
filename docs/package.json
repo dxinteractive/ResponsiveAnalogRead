@@ -21,7 +21,7 @@
     "mdx-loader": "^1.1.0",
     "mdxc": "^1.1.1",
     "numeral": "^2.0.6",
-    "parcels-react": "^0.9.0",
+    "parcels-react": "^0.12.0",
     "prismjs": "^1.15.0",
     "rc-slider": "^8.6.1",
     "react-animation-frame": "^1.0.1",

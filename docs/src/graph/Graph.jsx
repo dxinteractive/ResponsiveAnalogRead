@@ -1,15 +1,16 @@
 // @flow
 import React from 'react';
 import type {Node} from 'react';
+import type Parcel from 'parcels-react';
 import type Simulation from '../simulation/Simulation';
 import type SimulationTick from '../simulation/SimulationTick';
 import {VictoryAxis, VictoryChart, VictoryTheme, VictoryLine} from 'victory';
 
 import concat from 'unmutable/lib/concat';
+import get from 'unmutable/lib/get';
+import last from 'unmutable/lib/last';
 import map from 'unmutable/lib/map';
 import takeLast from 'unmutable/lib/takeLast';
-import update from 'unmutable/lib/update';
-import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 import {Colors} from 'dcme-style';
@@ -22,13 +23,15 @@ type DataPoint = {
 };
 
 type Props = {
+    demoParcel: Parcel,
     height: number,
     eqWidth: ?number,
     simulation: Simulation
 };
 
 type State = {
-    data: Array<DataPoint>
+    data: Array<DataPoint>,
+    cameraY: number
 };
 
 let range = (start: number, end: number, step: number = 1): Array<number> => {
@@ -48,6 +51,7 @@ export default class Graph extends React.Component<Props, State> {
         super(props);
         props.simulation.addBuffer(BUFFER_NAME);
         this.state = {
+            cameraY: 512,
             data: pipeWith(
                 range(0,DATA_POINTS),
                 map(x => ({
@@ -68,21 +72,55 @@ export default class Graph extends React.Component<Props, State> {
             return;
         }
 
-        this.setState(
-            update('data', pipe(
-                concat(buffer.map(_ => _.toJS())),
-                takeLast(DATA_POINTS),
-                map((data, x) => ({...data, x}))
-            ))
+        let {data, cameraY} = this.state;
+
+        data = pipeWith(
+            data,
+            concat(buffer.map(_ => _.toJS())),
+            takeLast(DATA_POINTS),
+            map((data, x) => ({...data, x}))
         );
+
+        let lastInput = pipeWith(
+            data,
+            last(),
+            get('input')
+        );
+
+        cameraY += (lastInput - cameraY) * 0.5;
+
+        this.setState({
+            data,
+            cameraY
+        });
     }
 
     render(): Node {
-        let {eqWidth, height} = this.props;
+        let {
+            demoParcel,
+            eqWidth,
+            height
+        } = this.props;
+
         let {data} = this.state;
 
+        let {cameraY} = this.state;
+        let {min, max, zoom} = demoParcel.value();
+        let range = max - min;
+        if(cameraY < min + (range * 0.5 / zoom)) {
+            cameraY = min + (range * 0.5 / zoom);
+        }
+        if(cameraY > max - (range * 0.5 / zoom)) {
+            cameraY = max - (range * 0.5 / zoom);
+        }
+
+        let domain = [
+            cameraY - (range * 0.5 / zoom),
+            cameraY + (range * 0.5 / zoom)
+        ];
+
         return <VictoryChart
-            domain={{y: [400, 600]}}
+            domain={{y: domain}}
             height={height}
             width={eqWidth}
             style={{

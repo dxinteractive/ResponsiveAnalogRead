@@ -7262,16 +7262,16 @@ pako@~1.0.5:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.6.tgz#0101211baa70c4bca4a0f63f2206e97b7dfaf258"
 
-parcels-react@^0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/parcels-react/-/parcels-react-0.9.0.tgz#2ee8f15cf327886d8116155ac22a114c1687bbad"
+parcels-react@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/parcels-react/-/parcels-react-0.12.0.tgz#00a0fde292cf52e83ab935369424d98e6b05e9ac"
   dependencies:
-    parcels "^0.9.0"
+    parcels "^0.12.0"
     unmutable "^0.26.0"
 
-parcels@^0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/parcels/-/parcels-0.9.0.tgz#01bdd4fef36b3285fbb04a2ec47ec7992cfb4e84"
+parcels@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/parcels/-/parcels-0.12.0.tgz#164ddb26f08ad8d3d521ae41bc51dc071dffcab3"
   dependencies:
     escape-string-regexp "^1.0.5"
     unmutable "0.29.2"

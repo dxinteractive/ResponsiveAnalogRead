@@ -92,8 +92,6 @@ export default class Simulation {
             output: this._analog.value()
         });
 
-        console.log("tick", tick);
-
         this._bufferMap.forEach((buffer: Array<SimulationTick>) => {
             buffer.push(tick);
         });

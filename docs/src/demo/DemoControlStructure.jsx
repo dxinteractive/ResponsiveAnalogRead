@@ -50,7 +50,7 @@ export default class DemoControlStructure extends Structure<Props> {
     input = (): Node => {
         return this.renderSlider({
             field: 'input',
-            label: 'Input'
+            label: 'Ideal'
         });
     };
 

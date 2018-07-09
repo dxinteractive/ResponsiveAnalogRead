@@ -10,8 +10,8 @@ export default ({children, data}: Object): Node => <div>
     <Helmet>
         <title>{data.site.siteMetadata.title}</title>
         <meta name="description" content="Website" />
-        <Head />
     </Helmet>
+    <Head />
     {children()}
 </div>;
 
