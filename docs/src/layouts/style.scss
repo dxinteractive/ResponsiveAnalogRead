@@ -1,6 +1,13 @@
 @import '~bruce/bruce';
 @include BruceReset;
 @include BruceBoxSizing;
+
+$bruce-zindex: (
+    'Select',
+    'Dropdown',
+    'Overlay'
+);
+
 @import '~dcme-style/lib/all';
 @include DcmeConfig;
 
@@ -11,8 +18,10 @@
 @include DcmeInput;
 @include DcmeLink;
 @include DcmeMessage;
+@include DcmeSelect;
 @include DcmeTerminal;
 @include DcmeText;
+@include DcmeToggle;
 @include DcmeWrapper;
 
 .Slider {

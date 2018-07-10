@@ -13,7 +13,7 @@ type Props = {
 let br = <span>&#8203;</span>;
 
 export default ({wasmExports}: Props): Node => <Wrapper>
-    <Box modifier="paddingTopKilo">
+    <Box modifier="paddingTopKilo widthMedium">
         <Text element="h1" modifier="marginTopGiga"><Text modifier="sizeGiga marginRight">Responsive{br}Analog{br}Read</Text> <Text modifier="code">v2.0.0</Text></Text>
         <Text element="p" modifier="margin">An Arduino library for smoothing out noise from analog readings.</Text>
         <Message>This page is <Text modifier="weightKilo">under construction</Text> and all information on it refers to the upcoming and unreleased <Text modifier="weightKilo">version 2.0.0</Text> of this library. For documentation regarding the current version, please go to the <Link href="https://github.com/dxinteractive/ResponsiveAnalogRead">ResponsiveAnalogRead github homepage</Link>.</Message>

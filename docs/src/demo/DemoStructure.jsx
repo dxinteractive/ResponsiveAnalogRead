@@ -10,6 +10,9 @@ import DemoControlView from './DemoControlView';
 import Structure from '../component/Structure';
 import GraphView from '../graph/GraphView';
 import DemoGraphSettingsStructure from './DemoGraphSettingsStructure';
+import DemoCodeSettingsStructure from './DemoCodeSettingsStructure';
+import DemoCode from './DemoCode';
+import Code from '../component/Code';
 
 type Props = {
     demoParcel: Parcel,
@@ -32,7 +35,7 @@ export default class DemoStructure extends Structure<Props> {
 
     static layout = ({code, codeSettings, graph, graphSettings, control}: LayoutProps): Node => {
         return <Box>
-            <Box modifier="marginBottom">
+            <Box modifier="marginBottomKilo">
                 <Box modifier="marginBottomMilli">{graphSettings()}</Box>
                 <Grid modifier="auto">
                     <GridItem modifier="padding">{graph()}</GridItem>
@@ -40,18 +43,19 @@ export default class DemoStructure extends Structure<Props> {
                 </Grid>
             </Box>
             <Grid>
-                <GridItem modifier="padding 6">{code()}</GridItem>
+                <GridItem modifier="6">{code()}</GridItem>
                 <GridItem modifier="padding 6">{codeSettings()}</GridItem>
             </Grid>
         </Box>;
     };
 
     code = (): Node => {
-        return <p>code</p>;
+        return <Code>{DemoCode()}</Code>;
     };
 
     codeSettings = (): Node => {
-        return <p>codeSettings</p>;
+        let {demoParcel} = this.props;
+        return <DemoCodeSettingsStructure demoParcel={demoParcel} />;
     };
 
     graph = (): Node => {

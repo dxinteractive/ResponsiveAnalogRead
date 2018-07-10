@@ -1,12 +1,13 @@
 // @flow
 import type {ComponentType} from 'react';
 import type {Node} from 'react';
-import type Parcel, {ChangeRequest} from 'parcels-react';
+import type Parcel from 'parcels-react';
 
 import React from 'react';
 import {PureParcel} from 'parcels-react';
 import {Grid, GridItem, Input, Select, Text} from 'dcme-style';
 import Structure from '../component/Structure';
+import {changeToNumber} from '../util/ParcelModifiers';
 
 type Props = {
     demoParcel: Parcel,
@@ -19,12 +20,13 @@ type LayoutProps = {
     zoom: () => Node
 };
 
-const changeToNumber = parcel => parcel.modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
-    let value: number = Number(changeRequest.data().value);
-    if(!isNaN(value)) {
-        parcel.onChange(value);
-    }
-});
+const ZOOM_OPTIONS = [
+    {value: "1", label: "1x"},
+    {value: "2", label: "2x"},
+    {value: "4", label: "4x"},
+    {value: "8", label: "8x"},
+    {value: "16", label: "16x"}
+];
 
 export default class DemoGraphSettingsStructure extends Structure<Props> {
 
@@ -43,7 +45,7 @@ export default class DemoGraphSettingsStructure extends Structure<Props> {
         let {demoParcel} = this.props;
         return <label>
             <Text modifier="monospace marginRight">max</Text>
-            <PureParcel parcel={demoParcel.get('max').modify(changeToNumber)}>
+            <PureParcel parcel={demoParcel.get('max').modify(changeToNumber)} debounce={250}>
                 {(parcel) => <Input
                     {...parcel.spread()}
                     type="number"
@@ -57,7 +59,7 @@ export default class DemoGraphSettingsStructure extends Structure<Props> {
         let {demoParcel} = this.props;
         return <label>
             <Text modifier="monospace marginRight">min</Text>
-            <PureParcel parcel={demoParcel.get('min').modify(changeToNumber)}>
+            <PureParcel parcel={demoParcel.get('min').modify(changeToNumber)} debounce={250}>
                 {(parcel) => <Input
                     {...parcel.spread()}
                     type="number"
@@ -72,13 +74,11 @@ export default class DemoGraphSettingsStructure extends Structure<Props> {
         return <label>
             <Text modifier="monospace marginRight">zoom</Text>
             <PureParcel parcel={demoParcel.get('zoom').modify(changeToNumber)}>
-                {(parcel) => <select {...parcel.spreadDOM()}>
-                    <option value="1">1x</option>
-                    <option value="2">2x</option>
-                    <option value="4">4x</option>
-                    <option value="8">8x</option>
-                    <option value="16">16x</option>
-                </select>}
+                {(parcel) => <Select
+                    {...parcel.spread()}
+                    options={ZOOM_OPTIONS}
+                    clearable={false}
+                />}
             </PureParcel>
         </label>;
     };
