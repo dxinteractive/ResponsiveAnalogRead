@@ -96,6 +96,7 @@ export default class Graph extends React.Component<Props, State> {
     }
 
     render(): Node {
+        return null;
         let {
             demoParcel,
             eqWidth,
@@ -136,13 +137,6 @@ export default class Graph extends React.Component<Props, State> {
             <VictoryLine
                 style={{
                     data: {stroke: Colors.tertiary}
-                }}
-                data={data}
-                y="input"
-            />
-            <VictoryLine
-                style={{
-                    data: {stroke: Colors.secondary}
                 }}
                 data={data}
                 y="raw"
