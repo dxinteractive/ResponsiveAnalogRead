@@ -5,14 +5,15 @@ import Prism from 'prismjs';
 import {Terminal} from 'dcme-style';
 
 type Props = {
-    children: Node
+    children: Node,
+    modifier?: string
 };
 
 export default class Code extends React.Component<Props> {
     render(): Node {
-        let code = this.props.children;
-        let __html = Prism.highlight(code, Prism.languages.cpp, 'cpp');
-        return <Terminal modifier="prism code">
+        let {children, modifier = ""} = this.props;
+        let __html = Prism.highlight(children, Prism.languages.cpp, 'cpp');
+        return <Terminal modifier={`prism ${modifier}`}>
             <pre dangerouslySetInnerHTML={{__html}} />
         </Terminal>;
     }
