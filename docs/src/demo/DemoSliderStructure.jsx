@@ -16,7 +16,8 @@ type Props = {
     label: string,
     min: number,
     max: number,
-    layout?: ComponentType
+    layout?: ComponentType,
+    value?: number
 };
 
 type LayoutProps = {
@@ -39,7 +40,7 @@ export default class DemoSliderStructure extends Structure<Props> {
 
     label = (): Node => {
         let {label} = this.props;
-        return <Text element="div" modifier="monospace center">{label}</Text>;
+        return <Text element="div" modifier="monospace center sizeMilli">{label}</Text>;
     };
 
     slider = (): Node => {
@@ -53,19 +54,20 @@ export default class DemoSliderStructure extends Structure<Props> {
 
         return <PureParcel parcel={valueParcel} forceUpdate={[min, max]}>
             {(parcel) => <Slider
+                {...other}
                 {...parcel.spread()}
                 className="Slider"
                 style={{height: height - 50}}
                 vertical
                 min={min}
                 max={max}
-                {...other}
             />}
         </PureParcel>;
     };
 
     value = (): Node => {
-        let {valueParcel} = this.props;
-        return <Text element="div" modifier="monospace center">{valueParcel.value()}</Text>;
+        let {value, valueParcel} = this.props;
+        let text = typeof value === "undefined" ? valueParcel.value() : value;
+        return <Text element="div" modifier="monospace center">{text}</Text>;
     };
 }

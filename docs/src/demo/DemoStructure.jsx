@@ -26,14 +26,16 @@ type LayoutProps = {
     codeSettings: () => Node,
     graph: () => Node,
     graphSettings: () => Node,
-    control: () => Node
+    control: () => Node,
+    legend: () => Node,
+    warning: () => Node
 };
 
 export default class DemoStructure extends Structure<Props> {
 
-    static elements = ['code', 'codeSettings', 'graph', 'graphSettings', 'control'];
+    static elements = ['code', 'codeSettings', 'graph', 'graphSettings', 'control', 'legend', 'warning'];
 
-    static layout = ({code, codeSettings, graph, graphSettings, control}: LayoutProps): Node => {
+    static layout = ({code, codeSettings, graph, graphSettings, control, legend, warning}: LayoutProps): Node => {
         return <Box>
             <Box modifier="marginBottomKilo">
                 <Box modifier="marginBottomMilli">{graphSettings()}</Box>
@@ -43,6 +45,10 @@ export default class DemoStructure extends Structure<Props> {
                 </Grid>
             </Box>
             <Grid>
+                <GridItem modifier="padding 6">{legend()}</GridItem>
+                <GridItem modifier="padding 6">{warning()}</GridItem>
+            </Grid>
+            <Grid>
                 <GridItem modifier="6">{code()}</GridItem>
                 <GridItem modifier="padding 6">{codeSettings()}</GridItem>
             </Grid>
@@ -50,7 +56,8 @@ export default class DemoStructure extends Structure<Props> {
     };
 
     code = (): Node => {
-        return <Code>{DemoCode()}</Code>;
+        let code = DemoCode(this.props.demoParcel.value());
+        return <Code modifier="code">{code}</Code>;
     };
 
     codeSettings = (): Node => {
@@ -83,5 +90,13 @@ export default class DemoStructure extends Structure<Props> {
             demoParcel={demoParcel}
             height={height}
         />;
+    };
+
+    legend = (): Node => {
+        return null;
+    };
+
+    warning = (): Node => {
+        return null;
     };
 }

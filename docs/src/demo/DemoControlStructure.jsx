@@ -7,6 +7,7 @@ import React from 'react';
 import Structure from '../component/Structure';
 import DemoSliderStructure from './DemoSliderStructure';
 import {Box, Grid, GridItem} from 'dcme-style';
+import {numberToExp} from '../util/ParcelModifiers';
 
 type Props = {
     demoParcel: Parcel,
@@ -16,6 +17,7 @@ type Props = {
 
 type LayoutProps = {
     input: () => Node,
+    noise: () => Node,
     raw: () => Node,
     output: () => Node
 };
@@ -35,12 +37,13 @@ export default class DemoControlStructure extends Structure<Props> {
         />;
     };
 
-    static elements = ['input', 'raw', 'output'];
+    static elements = ['input', 'noise', 'raw', 'output'];
 
-    static layout = ({input, raw, output}: LayoutProps): Node => {
-        return <Box style={{width: '12rem'}}>
+    static layout = ({input, noise, raw, output}: LayoutProps): Node => {
+        return <Box style={{width: '16rem'}}>
             <Grid>
                 <GridItem modifier="paddingMilli always 4">{input()}</GridItem>
+                <GridItem modifier="paddingMilli always 4">{noise()}</GridItem>
                 <GridItem modifier="paddingMilli always 4">{raw()}</GridItem>
                 <GridItem modifier="paddingMilli always 4">{output()}</GridItem>
             </Grid>
@@ -50,8 +53,28 @@ export default class DemoControlStructure extends Structure<Props> {
     input = (): Node => {
         return this.renderSlider({
             field: 'input',
-            label: 'Ideal'
+            label: 'Control'
         });
+    };
+
+    noise = (): Node => {
+        let {demoParcel, height} = this.props;
+        let {min, max} = demoParcel.value();
+        let curve = 5;
+        let range = max - min;
+        let sliderMax = Math.pow(range, 1/curve);
+        let value = demoParcel.get('noise').value();
+        value = value.toFixed(value >= 10 ? 0 : 1);
+
+        return <DemoSliderStructure
+            valueParcel={demoParcel.get('noise').modify(numberToExp(curve))}
+            height={height}
+            label="Noise"
+            min={0}
+            max={sliderMax}
+            step={sliderMax / range}
+            value={value}
+        />;
     };
 
     raw = (): Node => {

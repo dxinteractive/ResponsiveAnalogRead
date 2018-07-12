@@ -5,9 +5,9 @@ import type Parcel from 'parcels-react';
 
 import React from 'react';
 import {PureParcel} from 'parcels-react';
-import {Box, Select, Text, Toggle} from 'dcme-style';
+import {Box, Input, Text, Toggle} from 'dcme-style';
 import Structure from '../component/Structure';
-import {changeToNumber} from '../util/ParcelModifiers';
+import {numberToString} from '../util/ParcelModifiers';
 
 type Props = {
     demoParcel: Parcel,
@@ -15,42 +15,34 @@ type Props = {
 };
 
 type LayoutProps = {
-    amount: () => Node,
+    noisefloor: () => Node,
     smooth: () => Node,
     quick: () => Node,
     settle: () => Node
 };
 
-const AMOUNT_OPTIONS = [
-    {value: "1", label: "1"},
-    {value: "2", label: "2"},
-    {value: "3", label: "3"},
-    {value: "4", label: "4"},
-    {value: "5", label: "5"}
-];
-
 export default class DemoCodeSettingsStructure extends Structure<Props> {
 
-    static elements = ['amount', 'smooth', 'quick', 'settle'];
+    static elements = ['noisefloor', 'smooth', 'quick', 'settle'];
 
-    static layout = ({amount, smooth, quick, settle}: LayoutProps): Node => {
+    static layout = ({noisefloor, smooth, quick, settle}: LayoutProps): Node => {
         return <Box>
-            <Box modifier="paddingBottomMilli"><Text element="div" modifier="right">{amount()}</Text></Box>
+            <Box modifier="paddingBottomMilli"><Text element="div" modifier="right">{noisefloor()}</Text></Box>
             <Box modifier="paddingBottomMilli"><Text element="div" modifier="right">{smooth()}</Text></Box>
             <Box modifier="paddingBottomMilli"><Text element="div" modifier="right">{quick()}</Text></Box>
             <Box modifier="paddingBottomMilli"><Text element="div" modifier="right">{settle()}</Text></Box>
         </Box>;
     };
 
-    amount = (): Node => {
+    noisefloor = (): Node => {
         let {demoParcel} = this.props;
         return <label>
-            <Text modifier="monospace marginRight">amount</Text>
-            <PureParcel parcel={demoParcel.get('amount').modify(changeToNumber)}>
-                {(parcel) => <Select
+            <Text modifier="monospace marginRight">noisefloor</Text>
+            <PureParcel parcel={demoParcel.get('noisefloor').modify(numberToString())} debounce={50}>
+                {(parcel) => <Input
                     {...parcel.spread()}
-                    options={AMOUNT_OPTIONS}
-                    clearable={false}
+                    type="number"
+                    style={{width: '6rem'}}
                 />}
             </PureParcel>
         </label>;
