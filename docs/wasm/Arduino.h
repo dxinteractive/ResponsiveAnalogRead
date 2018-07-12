@@ -29,4 +29,8 @@ int analogRead(int pin) {
     return _analogReadValue;
 }
 
+void pinMode(int pin, int mode) {}
+
+int INPUT = 0;
+
 #endif

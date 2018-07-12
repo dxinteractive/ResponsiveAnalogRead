@@ -31,56 +31,122 @@
 class ResponsiveAnalogRead
 {
     public:
-        ResponsiveAnalogRead() {}
-
-        int pin() {
-            return _pin;
-        }
-
-        void setPin(int pin) {
+        void pin(int pin) {
+            pinMode(pin, INPUT);
             _pin = pin;
         }
 
-        int min() {
-            return _min;
+        void noisefloor(int noisefloor) {
+            this->noisefloor((float)noisefloor);
         }
 
-        void setMin(int min) {
-            _min = min;
+        void noisefloor(float noisefloor) {
+            _noisefloor = noisefloor;
+            //_snap = 1.0 / (float)noisefloor;
         }
 
-        int max() {
-            return _max;
+        void smooth(bool enable = true) {
+            _smooth = enable;
         }
 
-        void setMax(int max) {
-            _max = max;
+        void smooth(float snap) {
+            //_snap = snap;
+            _smooth = true;
+        }
+
+        void quick(bool enable = true) {
+            _quick = enable;
+        }
+
+        void settle(bool enable = true) {
+            _settle = enable;
+        }
+
+        void doubleRead(bool enable = true) {
+            _doubleRead = enable;
         }
 
         void read() {
-            int value = analogRead(_pin);
-            _input = value;
-            _output = value;
+            if(_doubleRead) analogRead(_pin);
+            read((float)analogRead(_pin));
         }
-        //void read(int value);
+
+        void read(int value) {
+            read((float)value);
+        }
+
+        void read(float value) {
+            _prevOutput = _output;
+            _input = value;
+            if(!_hasRead) {
+                _output = value;
+                _hasRead = true;
+                return;
+            }
+            if(!_hasReadTwice) {
+                _hasReadTwice = true;
+            }
+            _calculate();
+        }
+
         bool hasChanged() {
-            return true;
+            return !_hasReadTwice || _prevOutput != _output;
         }
 
         int raw() {
+            return (int)_input;
+        }
+
+        float rawFloat() {
             return _input;
         }
 
         int value() {
+            return (int)_output;
+        }
+
+        float valueFloat() {
             return _output;
         }
 
     private:
         int _pin;
-        int _min = 0;
-        int _max = 1023;
-        int _input;
-        int _output;
+
+        bool _smooth;
+        bool _quick;
+        bool _settle;
+        bool _doubleRead;
+
+        float _input;
+        float _output;
+        float _noisefloor;
+        float _prevOutput;
+
+        bool _hasRead = false;
+        bool _hasReadTwice = false;
+
+        void _calculate() {
+            float diff = _output - _input;
+            if(diff < 0.0) {
+                diff = -diff;
+            }
+
+            if(!_smooth || (_quick && diff >= _noisefloor)) {
+                _output = _input;
+                return;
+            }
+            float snap =_snapCurve(diff * 0.01 / _noisefloor);
+            _output = _output + (_input - _output) * snap;
+        }
+
+        float _snapCurve(float x) {
+            float y = 1.0 / (x + 1.0);
+            y = (1.0 - y) * 2.0;
+            if(y > 1.0) {
+                return 1.0;
+            }
+            return y;
+        }
 };
 
 #endif
