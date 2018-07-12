@@ -29,10 +29,8 @@ export default () => (Component: ComponentType<Props>): ComponentType<Props> => 
         }
 
         updateSimulationProps(props: Props) {
-            let input = props.demoParcel.get('input').value();
-            this.simulation.setState({
-                input
-            });
+            let newState = props.demoParcel.value();
+            this.simulation.setState(newState);
         }
 
         handleTick = (tick: SimulationTick) => {

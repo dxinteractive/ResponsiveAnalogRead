@@ -1,6 +1,8 @@
 // @flow
 
 import SimulationTick from './SimulationTick';
+import keyArray from 'unmutable/lib/keyArray';
+import pick from 'unmutable/lib/pick';
 
 type SimulationConfig = {
     ResponsiveAnalogRead: *,
@@ -8,11 +10,17 @@ type SimulationConfig = {
 };
 
 const DEFAULT_STATE = {
-    delay: 20,
+    delay: 1000,
     input: 0,
+    noise: 0,
     running: true,
     min: 0,
-    max: 1023
+    max: 1023,
+    noisefloor: 0,
+    smooth: true,
+    quick: true,
+    settle: true,
+    doubleRead: false
 };
 
 export default class Simulation {
@@ -39,11 +47,27 @@ export default class Simulation {
     };
 
     setState = (newState: *) => {
-        // TODO control running from here
         this.state = {
             ...this.state,
-            ...newState
+            ...pick(keyArray()(DEFAULT_STATE))(newState)
         };
+        this.updateSettings();
+    };
+
+    updateSettings = () => {
+        let {
+            noisefloor,
+            smooth,
+            quick,
+            settle,
+            doubleRead
+        } = this.state;
+
+        this._analog.noisefloor_float(noisefloor);
+        this._analog.smooth_float(smooth);
+        this._analog.quick(quick);
+        this._analog.settle(settle);
+        this._analog.doubleRead(doubleRead);
     };
 
     addOnTickListener = (onTick: Function) => {
@@ -74,9 +98,9 @@ export default class Simulation {
     tick = () => {
         if(this.state.running) {
             this._setMillis(Date.now() - this._startTime);
-            let {input} = this.state;
-            let noise = (Math.random() - 0.5) * 10;
-            let read = Math.round(input + noise);
+            let {input, noise} = this.state;
+            let rand = (Math.random() - 0.5) * (noise + 1);
+            let read = Math.round(input + rand);
             read = Math.min(this.state.max, Math.max(this.state.min, read));
             this._setAnalogReadValue(read);
             this.loop();
