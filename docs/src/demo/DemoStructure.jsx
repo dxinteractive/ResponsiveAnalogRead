@@ -5,7 +5,7 @@ import type Parcel from 'parcels-react';
 import type Simulation from '../simulation/Simulation';
 
 import React from 'react';
-import {Box, Grid, GridItem} from 'dcme-style';
+import {Box, Grid, GridItem, Text} from 'dcme-style';
 import DemoControlView from './DemoControlView';
 import Structure from '../component/Structure';
 import GraphView from '../graph/GraphView';
@@ -16,16 +16,18 @@ import Code from '../component/Code';
 
 type Props = {
     demoParcel: Parcel,
-    height: number,
     layout?: ComponentType,
-    simulation: Simulation
+    simulation: Simulation,
+    sliderHeight: number
 };
 
 type LayoutProps = {
     code: () => Node,
     codeSettings: () => Node,
+    codeTitle: () => Node,
     graph: () => Node,
     graphSettings: () => Node,
+    graphTitle: () => Node,
     control: () => Node,
     legend: () => Node,
     warning: () => Node
@@ -33,12 +35,17 @@ type LayoutProps = {
 
 export default class DemoStructure extends Structure<Props> {
 
-    static elements = ['code', 'codeSettings', 'graph', 'graphSettings', 'control', 'legend', 'warning'];
+    static elements = ['code', 'codeSettings', 'codeTitle', 'graph', 'graphSettings', 'graphTitle', 'control', 'legend', 'warning'];
 
-    static layout = ({code, codeSettings, graph, graphSettings, control, legend, warning}: LayoutProps): Node => {
+    static layout = ({code, codeSettings, codeTitle, graph, graphSettings, graphTitle, control, legend, warning}: LayoutProps): Node => {
         return <Box>
             <Box modifier="marginBottomKilo">
-                <Box modifier="marginBottomMilli">{graphSettings()}</Box>
+                <Box modifier="marginBottomMilli">
+                    <Grid modifier="auto">
+                        <GridItem modifier="padding shrink">{graphTitle()}</GridItem>
+                        <GridItem modifier="padding">{graphSettings()}</GridItem>
+                    </Grid>
+                </Box>
                 <Grid modifier="auto">
                     <GridItem modifier="padding">{graph()}</GridItem>
                     <GridItem modifier="padding shrink">{control()}</GridItem>
@@ -49,8 +56,8 @@ export default class DemoStructure extends Structure<Props> {
                 <GridItem modifier="padding 6">{warning()}</GridItem>
             </Grid>
             <Grid>
-                <GridItem modifier="6">{code()}</GridItem>
-                <GridItem modifier="padding 6">{codeSettings()}</GridItem>
+                <GridItem modifier="padding 6">{code()}</GridItem>
+                <GridItem modifier="padding 6">{codeTitle()}{codeSettings()}</GridItem>
             </Grid>
         </Box>;
     };
@@ -61,20 +68,31 @@ export default class DemoStructure extends Structure<Props> {
     };
 
     codeSettings = (): Node => {
-        let {demoParcel} = this.props;
-        return <DemoCodeSettingsStructure demoParcel={demoParcel} />;
+        let {
+            demoParcel,
+            sliderHeight
+        } = this.props;
+
+        return <DemoCodeSettingsStructure
+            demoParcel={demoParcel}
+            sliderHeight={sliderHeight}
+        />;
+    };
+
+    codeTitle = (): Node => {
+        return <Text element="h3" modifier="sizeKilo marginBottomKilo">Settings</Text>;
     };
 
     graph = (): Node => {
         let {
             demoParcel,
-            height,
+            sliderHeight,
             simulation
         } = this.props;
 
         return <GraphView
             demoParcel={demoParcel}
-            height={height}
+            height={sliderHeight}
             simulation={simulation}
         />;
     };
@@ -84,11 +102,16 @@ export default class DemoStructure extends Structure<Props> {
         return <DemoGraphSettingsStructure demoParcel={demoParcel} />;
     };
 
+
+    graphTitle = (): Node => {
+        return null;
+    };
+
     control = (): Node => {
-        let {demoParcel, height} = this.props;
+        let {demoParcel, sliderHeight} = this.props;
         return <DemoControlView
             demoParcel={demoParcel}
-            height={height}
+            height={sliderHeight}
         />;
     };
 

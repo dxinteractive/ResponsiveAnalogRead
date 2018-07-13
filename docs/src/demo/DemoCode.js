@@ -22,13 +22,13 @@ ${values}
 type Props = {
     amount: number,
     noisefloor: number,
+    glide: number,
     smooth: boolean,
-    quick: boolean,
     settle: boolean,
     pin: boolean
 };
 
-export default ({amount, noisefloor, smooth, quick, settle, pin}: Props): string => {
+export default ({amount, noisefloor, smooth, glide, settle, pin}: Props): string => {
     let instances = Array(amount || 0)
         .fill(null)
         .map((u, index) => index + 1);
@@ -39,9 +39,9 @@ export default ({amount, noisefloor, smooth, quick, settle, pin}: Props): string
 
     let renderSetup = (key) => [
         pin && `analog${key}.pin(A${key})`,
-        noisefloor && `analog${key}.noisefloor(${noisefloor});`,
+        noisefloor && `analog${key}.noisefloor(${noisefloor.toFixed(1)});`,
+        glide && `analog${key}.glide(${glide.toFixed(1)});`,
         smooth && `analog${key}.smooth();`,
-        quick && `analog${key}.quick();`,
         settle && `analog${key}.settle();`
     ]
         .filter(ii => ii)

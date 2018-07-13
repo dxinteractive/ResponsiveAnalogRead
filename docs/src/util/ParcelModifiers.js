@@ -10,6 +10,16 @@ export const numberToString = () => parcel => parcel
         }
     });
 
+export const exp = (pow: number) => (value: number) => Math.pow(value, 1/pow);
+
 export const numberToExp = (pow: number) => parcel => parcel
-    .modifyValue(value => Math.pow(value, 1/pow))
+    .modifyValue(exp(pow))
     .modifyChangeValue(value => Math.pow(value, pow));
+
+
+export const numberToFloor = (step: ?number = 1): Parcel => {
+    let floor = value => Math.floor(value / step) * step;
+    return parcel => parcel
+        .modifyValue(floor)
+        .modifyChangeValue(floor);
+};

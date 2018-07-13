@@ -7,13 +7,14 @@ export default () => ({
     raw: 0,
     output: 0,
     min: 0,
-    max: 1023,
+    max: 127,
     zoom: 16,
     amount: 1,
     noisefloor: 4,
+    glide: 0,
     smooth: true,
-    quick: true,
     settle: true,
     pin: true,
-    doubleRead: false
+    doubleRead: false,
+    play: true
 });

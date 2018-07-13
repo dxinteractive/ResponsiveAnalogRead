@@ -5,76 +5,104 @@ import type Parcel from 'parcels-react';
 
 import React from 'react';
 import {PureParcel} from 'parcels-react';
-import {Box, Input, Text, Toggle} from 'dcme-style';
+import {Box, Grid, GridItem, Text, Toggle} from 'dcme-style';
 import Structure from '../component/Structure';
-import {numberToString} from '../util/ParcelModifiers';
+import {exp, numberToExp, numberToFloor} from '../util/ParcelModifiers';
+import DemoSliderStructure from './DemoSliderStructure';
 
 type Props = {
     demoParcel: Parcel,
-    layout?: ComponentType
+    layout?: ComponentType,
+    sliderHeight: number
 };
 
 type LayoutProps = {
     noisefloor: () => Node,
+    glide: () => Node,
     smooth: () => Node,
-    quick: () => Node,
     settle: () => Node
 };
 
 export default class DemoCodeSettingsStructure extends Structure<Props> {
 
-    static elements = ['noisefloor', 'smooth', 'quick', 'settle'];
+    static elements = ['noisefloor', 'glide', 'smooth', 'settle'];
 
-    static layout = ({noisefloor, smooth, quick, settle}: LayoutProps): Node => {
+    static layout = ({noisefloor, glide, smooth, settle}: LayoutProps): Node => {
         return <Box>
-            <Box modifier="paddingBottomMilli"><Text element="div" modifier="right">{noisefloor()}</Text></Box>
-            <Box modifier="paddingBottomMilli"><Text element="div" modifier="right">{smooth()}</Text></Box>
-            <Box modifier="paddingBottomMilli"><Text element="div" modifier="right">{quick()}</Text></Box>
-            <Box modifier="paddingBottomMilli"><Text element="div" modifier="right">{settle()}</Text></Box>
+            <Grid modifier="auto">
+                <GridItem modifier="shrink paddingMilli">
+                    {smooth()}
+                    {settle()}
+                </GridItem>
+                <GridItem modifier="shrink paddingMilli">{noisefloor()}</GridItem>
+                <GridItem modifier="shrink paddingMilli">{glide()}</GridItem>
+                <GridItem />
+            </Grid>
         </Box>;
     };
 
     noisefloor = (): Node => {
-        let {demoParcel} = this.props;
-        return <label>
-            <Text modifier="monospace marginRight">noisefloor</Text>
-            <PureParcel parcel={demoParcel.get('noisefloor').modify(numberToString())} debounce={50}>
-                {(parcel) => <Input
-                    {...parcel.spread()}
-                    type="number"
-                    style={{width: '6rem'}}
-                />}
-            </PureParcel>
-        </label>;
+        let {demoParcel, sliderHeight} = this.props;
+        let {min, max} = demoParcel.value();
+        let curve = 5;
+        let range = max - min;
+        let sliderMax = exp(curve)(range);
+        let value = demoParcel
+            .get('noisefloor')
+            .value()
+            .toFixed(1);
+
+        return <DemoSliderStructure
+            valueParcel={demoParcel.get('noisefloor').modify(numberToFloor(0.1), numberToExp(curve))}
+            height={sliderHeight}
+            label="Noisefloor"
+            min={exp(curve)(0.04)}
+            max={sliderMax}
+            step={sliderMax / range}
+            value={value}
+        />;
+    };
+
+    glide = (): Node => {
+        let {demoParcel, sliderHeight} = this.props;
+        let curve = 5;
+        let range = 50;
+        let sliderMax = exp(curve)(range);
+        let value = demoParcel
+            .get('glide')
+            .value()
+            .toFixed(1);
+
+        return <DemoSliderStructure
+            valueParcel={demoParcel.get('glide').modify(numberToFloor(0.1), numberToExp(curve))}
+            height={sliderHeight}
+            label="Glide"
+            min={exp(curve)(0.04)}
+            max={sliderMax}
+            step={sliderMax / range}
+            value={value}
+        />;
     };
 
     smooth = (): Node => {
         let {demoParcel} = this.props;
-        return <label>
-            <Text modifier="monospace marginRight">smooth</Text>
-            <PureParcel parcel={demoParcel.get('smooth')}>
-                {(parcel) => <Toggle {...parcel.spread()} modifier="onOff" />}
-            </PureParcel>
-        </label>;
-    };
-
-    quick = (): Node => {
-        let {demoParcel} = this.props;
-        return <label>
-            <Text modifier="monospace marginRight">quick</Text>
-            <PureParcel parcel={demoParcel.get('quick')}>
-                {(parcel) => <Toggle {...parcel.spread()} modifier="onOff" />}
-            </PureParcel>
-        </label>;
+        return <Text element="div" modifier="marginBottom">
+            <label>
+                <PureParcel parcel={demoParcel.get('smooth')}>
+                    {(parcel) => <Toggle {...parcel.spread()} modifier="checkbox">smooth</Toggle>}
+                </PureParcel>
+            </label>
+        </Text>;
     };
 
     settle = (): Node => {
         let {demoParcel} = this.props;
-        return <label>
-            <Text modifier="monospace marginRight">settle</Text>
-            <PureParcel parcel={demoParcel.get('settle')}>
-                {(parcel) => <Toggle {...parcel.spread()} modifier="onOff" />}
-            </PureParcel>
-        </label>;
+        return <Text element="div" modifier="marginBottom">
+            <label>
+                <PureParcel parcel={demoParcel.get('settle')}>
+                    {(parcel) => <Toggle {...parcel.spread()} modifier="checkbox">settle</Toggle>}
+                </PureParcel>
+            </label>
+        </Text>;
     };
 }

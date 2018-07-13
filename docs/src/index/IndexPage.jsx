@@ -24,10 +24,10 @@ export default ({wasmExports}: Props): Node => <Box modifier="marginBottomGiga">
         <Box modifier="paddingTopKilo widthMedium">
             <Text element="h2" modifier="sizeMega marginMega">Example</Text>
             <Text element="p" modifier="margin">This is a standard setup that uses <Text modifier="code">ResponsiveAnalogRead</Text> to read from pin <Text modifier="code">A0</Text>.</Text>
-            <Text element="p" modifier="margin">It uses the <Text modifier="code">smooth()</Text> option to smooth the readings out, and uses <Text modifier="code">quick()</Text> to respond quickly to large, sudden changes in the input value.</Text>
+            <Text element="p" modifier="margin">It uses the <Text modifier="code">smooth()</Text> option to smooth the readings out.</Text>
         </Box>
         <Box modifier="paddingTopKilo">
-            <Demo height={300} wasmExports={wasmExports} />
+            <Demo sliderHeight={300} wasmExports={wasmExports} />
         </Box>
         <Box modifier="paddingTop widthMedium">
             <Text element="h3" modifier="sizeKilo marginKilo">More examples</Text>

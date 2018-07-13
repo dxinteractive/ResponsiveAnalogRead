@@ -14,11 +14,12 @@ const DEFAULT_STATE = {
     input: 0,
     noise: 0,
     running: true,
+    play: true,
     min: 0,
     max: 1023,
     noisefloor: 0,
+    glide: 0,
     smooth: true,
-    quick: true,
     settle: true,
     doubleRead: false
 };
@@ -58,14 +59,14 @@ export default class Simulation {
         let {
             noisefloor,
             smooth,
-            quick,
+            glide,
             settle,
             doubleRead
         } = this.state;
 
         this._analog.noisefloor_float(noisefloor);
-        this._analog.smooth_float(smooth);
-        this._analog.quick(quick);
+        this._analog.smooth(smooth);
+        this._analog.glide(glide);
         this._analog.settle(settle);
         this._analog.doubleRead(doubleRead);
     };
@@ -109,23 +110,31 @@ export default class Simulation {
     };
 
     loop = () => {
-        this._analog.read();
-        let tick = new SimulationTick({
-            input: this.state.input,
-            raw: this._analog.raw(),
-            output: this._analog.value()
-        });
+        let {
+            delay,
+            input,
+            play
+        } = this.state;
 
-        this._bufferMap.forEach((buffer: Array<SimulationTick>) => {
-            buffer.push(tick);
-        });
+        if(play) {
+            this._analog.read();
+            let tick = new SimulationTick({
+                input,
+                raw: this._analog.raw(),
+                output: this._analog.value()
+            });
 
-        this._onTickListeners.forEach((onTick: Function) => {
-            onTick(tick);
-        });
+            this._bufferMap.forEach((buffer: Array<SimulationTick>) => {
+                buffer.push(tick);
+            });
+
+            this._onTickListeners.forEach((onTick: Function) => {
+                onTick(tick);
+            });
+        }
 
         // delay() equivalent
-        setTimeout(this.tick, this.state.delay);
+        setTimeout(this.tick, delay);
     };
 }
 

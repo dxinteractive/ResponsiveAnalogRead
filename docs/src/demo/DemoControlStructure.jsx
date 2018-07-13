@@ -6,8 +6,8 @@ import type Parcel from 'parcels-react';
 import React from 'react';
 import Structure from '../component/Structure';
 import DemoSliderStructure from './DemoSliderStructure';
+import {numberToExp, exp, numberToFloor} from '../util/ParcelModifiers';
 import {Box, Grid, GridItem} from 'dcme-style';
-import {numberToExp} from '../util/ParcelModifiers';
 
 type Props = {
     demoParcel: Parcel,
@@ -62,15 +62,15 @@ export default class DemoControlStructure extends Structure<Props> {
         let {min, max} = demoParcel.value();
         let curve = 5;
         let range = max - min;
-        let sliderMax = Math.pow(range, 1/curve);
+        let sliderMax = exp(curve)(range);
         let value = demoParcel.get('noise').value();
         value = value.toFixed(value >= 10 ? 0 : 1);
 
         return <DemoSliderStructure
-            valueParcel={demoParcel.get('noise').modify(numberToExp(curve))}
+            valueParcel={demoParcel.get('noise').modify(numberToFloor(0.1), numberToExp(curve))}
             height={height}
             label="Noise"
-            min={0}
+            min={exp(curve)(0.04)}
             max={sliderMax}
             step={sliderMax / range}
             value={value}

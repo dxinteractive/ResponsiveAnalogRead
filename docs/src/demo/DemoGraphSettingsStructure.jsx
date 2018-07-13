@@ -5,7 +5,7 @@ import type Parcel from 'parcels-react';
 
 import React from 'react';
 import {PureParcel} from 'parcels-react';
-import {Grid, GridItem, Input, Select, Text} from 'dcme-style';
+import {Grid, GridItem, Input, Select, Text, Toggle} from 'dcme-style';
 import Structure from '../component/Structure';
 import {numberToString} from '../util/ParcelModifiers';
 
@@ -15,6 +15,7 @@ type Props = {
 };
 
 type LayoutProps = {
+    play: () => Node,
     max: () => Node,
     min: () => Node,
     zoom: () => Node
@@ -32,15 +33,24 @@ const ZOOM_OPTIONS = [
 
 export default class DemoGraphSettingsStructure extends Structure<Props> {
 
-    static elements = ['max', 'min', 'zoom'];
+    static elements = ['play', 'max', 'min', 'zoom'];
 
-    static layout = ({zoom, min, max}: LayoutProps): Node => {
+    static layout = ({play, zoom, min, max}: LayoutProps): Node => {
         return <Grid modifier="auto">
-            <GridItem />
+            <GridItem modifier="paddingMilli">{play()}</GridItem>
             <GridItem modifier="paddingMilli shrink">{zoom()}</GridItem>
             <GridItem modifier="paddingMilli shrink">{min()}</GridItem>
             <GridItem modifier="paddingMilli shrink">{max()}</GridItem>
         </Grid>;
+    };
+
+    play = (): Node => {
+        let {demoParcel} = this.props;
+        return <label>
+            <PureParcel parcel={demoParcel.get('play')}>
+                {(parcel) => <Toggle {...parcel.spread()} modifier="checkbox">run</Toggle>}
+            </PureParcel>
+        </label>;
     };
 
     max = (): Node => {
