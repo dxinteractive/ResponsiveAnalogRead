@@ -1,6 +1,6 @@
 // @flow
 
-let render = ({instanciations, setup, reads, values}) => `#include <Arduino.h>
+let render = ({instanciations, setup, reads, values, delay}) => `#include <Arduino.h>
 #include <ResponsiveAnalogRead.h>
 
 ${instanciations}
@@ -14,9 +14,7 @@ ${reads}
 
 ${values}
 
-  // more code here...
-  // optional delay
-  delay(10);
+  // more code here...${delay}
 }`;
 
 type Props = {
@@ -28,7 +26,7 @@ type Props = {
     pin: boolean
 };
 
-export default ({amount, noisefloor, smooth, glide, settle, pin}: Props): string => {
+export default ({amount, noisefloor, smooth, glide, delay, settle, pin}: Props): string => {
     let instances = Array(amount || 0)
         .fill(null)
         .map((u, index) => index + 1);
@@ -61,13 +59,16 @@ export default ({amount, noisefloor, smooth, glide, settle, pin}: Props): string
         .join("\n");
 
     let values = instances
-        .map(key => `  Serial.print("Analog${key} value: ");\n  Serial.println(analog${key}.value());`)
-        .join("\n");
+        .map(key => `  Serial.print("Analog${key} value: ");\n  Serial.println(analog${key}.value());\n  if(analog${key}.hasChanged()) {\n    Serial.println("Analog${key} changed");\n  }`)
+        .join("\n\n");
+
+    let delayString = delay ? `\n  delay(${delay});` : ``;
 
     return render({
         instanciations,
         setup,
         reads,
-        values
+        values,
+        delay: delayString
     });
 };

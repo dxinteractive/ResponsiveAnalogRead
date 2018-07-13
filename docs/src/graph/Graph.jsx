@@ -4,7 +4,7 @@ import type {Node} from 'react';
 import type Parcel from 'parcels-react';
 import type Simulation from '../simulation/Simulation';
 import type SimulationTick from '../simulation/SimulationTick';
-import {VictoryAxis, VictoryChart, VictoryTheme, VictoryLine} from 'victory';
+import {Line} from 'react-chartjs-2';
 
 import concat from 'unmutable/lib/concat';
 import get from 'unmutable/lib/get';
@@ -31,7 +31,21 @@ type Props = {
 
 type State = {
     data: Array<DataPoint>,
-    cameraY: number
+    cameraY?: number
+};
+
+let createDataset = ({data, key, color}: *): * => {
+    return {
+        label: key,
+        legend: {
+            display: false
+        },
+        fill: false,
+        borderWidth: 1.5,
+        borderColor: color,
+        spanGaps: false,
+        data: data.map((point, x) => ({x, y: point[key]}))
+    };
 };
 
 let range = (start: number, end: number, step: number = 1): Array<number> => {
@@ -51,7 +65,7 @@ export default class Graph extends React.Component<Props, State> {
         super(props);
         props.simulation.addBuffer(BUFFER_NAME);
         this.state = {
-            cameraY: 512,
+            cameraY: undefined,
             data: pipeWith(
                 range(0,DATA_POINTS),
                 map(x => ({
@@ -87,7 +101,11 @@ export default class Graph extends React.Component<Props, State> {
             get('input')
         );
 
-        cameraY += (lastInput - cameraY) * 0.5;
+        if(typeof cameraY === "undefined") {
+            cameraY = lastInput;
+        } else {
+            cameraY += (lastInput - cameraY) * 0.5;
+        }
 
         this.setState({
             data,
@@ -96,10 +114,9 @@ export default class Graph extends React.Component<Props, State> {
     }
 
     render(): Node {
-        return null;
         let {
             demoParcel,
-            eqWidth,
+            eqWidth: width,
             height
         } = this.props;
 
@@ -115,39 +132,64 @@ export default class Graph extends React.Component<Props, State> {
             cameraY = max - (range * 0.5 / zoom);
         }
 
-        let domain = [
-            cameraY - (range * 0.5 / zoom),
-            cameraY + (range * 0.5 / zoom)
+        let options = {
+            scales: {
+                xAxes: [{
+                    scaleLabel: {
+                        display: false
+                    },
+                    ticks: {
+                        min: 0,
+                        max: DATA_POINTS
+                    },
+                    type: 'linear',
+                    display: false
+                }],
+                yAxes: [{
+                    ticks: {
+                        min: cameraY - (range * 0.5 / zoom),
+                        max: cameraY + (range * 0.5 / zoom)
+                    }
+                }]
+            },
+            elements: {
+                line: {
+                    tension: 0
+                },
+                point: {
+                    radius: 0
+                }
+            },
+            legend: {
+                display: false
+            },
+            animation: {
+                duration: 0
+            },
+            hover: {
+                animationDuration: 0
+            },
+            responsiveAnimationDuration: 0
+        };
+
+        let datasets = [
+            createDataset({
+                data,
+                key: "output",
+                color: Colors.primary
+            }),
+            createDataset({
+                data,
+                key: "raw",
+                color: Colors.tertiary
+            })
         ];
 
-        return <VictoryChart
-            domain={{y: domain}}
-            height={height}
-            width={eqWidth}
-            style={{
-                labels: {
-                    fontFamily: `"Roboto Mono", monospace`
-                }
-            }}
-            theme={VictoryTheme.material}
-            padding={{left: 60}}
-        >
-            <VictoryAxis />
-            <VictoryAxis dependentAxis />
-            <VictoryLine
-                style={{
-                    data: {stroke: Colors.tertiary}
-                }}
-                data={data}
-                y="raw"
+        return <div style={{width, height}}>
+            <Line
+                data={{datasets}}
+                options={options}
             />
-            <VictoryLine
-                style={{
-                    data: {stroke: Colors.primary}
-                }}
-                data={data}
-                y="output"
-            />
-        </VictoryChart>;
+        </div>;
     }
 }

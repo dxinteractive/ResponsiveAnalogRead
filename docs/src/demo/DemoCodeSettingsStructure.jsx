@@ -19,20 +19,23 @@ type Props = {
 type LayoutProps = {
     noisefloor: () => Node,
     glide: () => Node,
+    delay: () => Node,
     smooth: () => Node,
-    settle: () => Node
+    settle: () => Node,
+    doubleRead: () => Node
 };
 
 export default class DemoCodeSettingsStructure extends Structure<Props> {
 
-    static elements = ['noisefloor', 'glide', 'smooth', 'settle'];
+    static elements = ['noisefloor', 'glide', 'delay', 'smooth', 'settle', 'doubleRead'];
 
-    static layout = ({noisefloor, glide, smooth, settle}: LayoutProps): Node => {
+    static layout = ({noisefloor, glide, delay, smooth, settle, doubleRead}: LayoutProps): Node => {
         return <Box>
             <Grid modifier="auto">
                 <GridItem modifier="shrink paddingMilli">
                     {smooth()}
                     {settle()}
+                    {doubleRead()}
                 </GridItem>
                 <GridItem modifier="shrink paddingMilli">{noisefloor()}</GridItem>
                 <GridItem modifier="shrink paddingMilli">{glide()}</GridItem>
@@ -84,6 +87,27 @@ export default class DemoCodeSettingsStructure extends Structure<Props> {
         />;
     };
 
+    delay = (): Node => {
+        let {demoParcel, sliderHeight} = this.props;
+        let curve = 5;
+        let range = 1000;
+        let sliderMax = exp(curve)(range);
+        let value = demoParcel
+            .get('delay')
+            .value()
+            .toFixed(0);
+
+        return <DemoSliderStructure
+            valueParcel={demoParcel.get('delay').modify(numberToFloor(), numberToExp(curve))}
+            height={sliderHeight}
+            label="Delay"
+            min={exp(curve)(0.4)}
+            max={sliderMax}
+            step={sliderMax / range}
+            value={value}
+        />;
+    };
+
     smooth = (): Node => {
         let {demoParcel} = this.props;
         return <Text element="div" modifier="marginBottom">
@@ -101,6 +125,20 @@ export default class DemoCodeSettingsStructure extends Structure<Props> {
             <label>
                 <PureParcel parcel={demoParcel.get('settle')}>
                     {(parcel) => <Toggle {...parcel.spread()} modifier="checkbox">settle</Toggle>}
+                </PureParcel>
+            </label>
+        </Text>;
+    };
+
+    doubleRead = (): Node => {
+        let {demoParcel} = this.props;
+        if(demoParcel.get('amount').value() < 2) {
+            return null;
+        }
+        return <Text element="div" modifier="marginBottom">
+            <label>
+                <PureParcel parcel={demoParcel.get('doubleRead')}>
+                    {(parcel) => <Toggle {...parcel.spread()} modifier="checkbox">doubleRead</Toggle>}
                 </PureParcel>
             </label>
         </Text>;

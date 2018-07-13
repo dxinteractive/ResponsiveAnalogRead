@@ -9,6 +9,7 @@
     "blueflag-test": "^0.18.1",
     "bruce": "^5.0.0",
     "buffer-loader": "^0.0.1",
+    "chart.js": "^2.7.2",
     "dcme-style": "^0.12.0",
     "gatsby": "^1.9.247",
     "gatsby-link": "^1.6.40",
@@ -25,10 +26,10 @@
     "prismjs": "^1.15.0",
     "rc-slider": "^8.6.1",
     "react-animation-frame": "^1.0.1",
+    "react-chartjs-2": "^2.7.2",
     "react-helmet": "^5.2.0",
     "stampy": "^0.39.0",
-    "unmutable": "^0.29.2",
-    "victory": "^0.27.2"
+    "unmutable": "^0.29.2"
   },
   "scripts": {
     "build-gatsby": "gatsby build",
