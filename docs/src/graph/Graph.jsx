@@ -34,6 +34,49 @@ type State = {
     cameraY?: number
 };
 
+const BUFFER_NAME = 'graph';
+const DATA_POINTS = 100;
+
+let createOptions = ({cameraY, range, zoom}) => ({
+    scales: {
+        xAxes: [{
+            scaleLabel: {
+                display: false
+            },
+            ticks: {
+                min: 0,
+                max: DATA_POINTS
+            },
+            type: 'linear',
+            display: false
+        }],
+        yAxes: [{
+            ticks: {
+                min: cameraY - (range * 0.5 / zoom),
+                max: cameraY + (range * 0.5 / zoom)
+            }
+        }]
+    },
+    elements: {
+        line: {
+            tension: 0
+        },
+        point: {
+            radius: 0
+        }
+    },
+    legend: {
+        display: false
+    },
+    animation: {
+        duration: 0
+    },
+    hover: {
+        animationDuration: 0
+    },
+    responsiveAnimationDuration: 0
+});
+
 let createDataset = ({data, key, color}: *): * => {
     return {
         label: key,
@@ -48,16 +91,13 @@ let createDataset = ({data, key, color}: *): * => {
     };
 };
 
-let range = (start: number, end: number, step: number = 1): Array<number> => {
+let rangeArray = (start: number, end: number, step: number = 1): Array<number> => {
     let arr = [];
     for(var i = start; i < end; i += step) {
         arr.push(i);
     }
     return arr;
 };
-
-const BUFFER_NAME = 'graph';
-const DATA_POINTS = 100;
 
 export default class Graph extends React.Component<Props, State> {
 
@@ -67,7 +107,7 @@ export default class Graph extends React.Component<Props, State> {
         this.state = {
             cameraY: undefined,
             data: pipeWith(
-                range(0,DATA_POINTS),
+                rangeArray(0,DATA_POINTS),
                 map(x => ({
                     x,
                     input: null,
@@ -132,45 +172,11 @@ export default class Graph extends React.Component<Props, State> {
             cameraY = max - (range * 0.5 / zoom);
         }
 
-        let options = {
-            scales: {
-                xAxes: [{
-                    scaleLabel: {
-                        display: false
-                    },
-                    ticks: {
-                        min: 0,
-                        max: DATA_POINTS
-                    },
-                    type: 'linear',
-                    display: false
-                }],
-                yAxes: [{
-                    ticks: {
-                        min: cameraY - (range * 0.5 / zoom),
-                        max: cameraY + (range * 0.5 / zoom)
-                    }
-                }]
-            },
-            elements: {
-                line: {
-                    tension: 0
-                },
-                point: {
-                    radius: 0
-                }
-            },
-            legend: {
-                display: false
-            },
-            animation: {
-                duration: 0
-            },
-            hover: {
-                animationDuration: 0
-            },
-            responsiveAnimationDuration: 0
-        };
+        let options = createOptions({
+            cameraY,
+            range,
+            zoom
+        });
 
         let datasets = [
             createDataset({

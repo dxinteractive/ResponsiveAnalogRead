@@ -49,10 +49,11 @@ export default class DemoSliderStructure extends Structure<Props> {
             height,
             min,
             max,
+            disabled,
             ...other
         } = this.props;
 
-        return <PureParcel parcel={valueParcel} forceUpdate={[min, max]}>
+        return <PureParcel parcel={valueParcel} forceUpdate={[min, max, disabled]}>
             {(parcel) => <Slider
                 {...other}
                 {...parcel.spread()}
@@ -61,6 +62,7 @@ export default class DemoSliderStructure extends Structure<Props> {
                 vertical
                 min={min}
                 max={max}
+                disabled={disabled}
             />}
         </PureParcel>;
     };

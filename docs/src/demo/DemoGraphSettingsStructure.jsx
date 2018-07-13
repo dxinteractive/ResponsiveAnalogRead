@@ -57,7 +57,7 @@ export default class DemoGraphSettingsStructure extends Structure<Props> {
         let {demoParcel} = this.props;
         return <label>
             <Text modifier="monospace marginRight">max</Text>
-            <PureParcel parcel={demoParcel.get('max').modify(numberToString())} debounce={250}>
+            <PureParcel parcel={demoParcel.get('max').modify(numberToString())} debounce={100}>
                 {(parcel) => <Input
                     {...parcel.spread()}
                     type="number"
@@ -71,7 +71,7 @@ export default class DemoGraphSettingsStructure extends Structure<Props> {
         let {demoParcel} = this.props;
         return <label>
             <Text modifier="monospace marginRight">min</Text>
-            <PureParcel parcel={demoParcel.get('min').modify(numberToString())} debounce={250}>
+            <PureParcel parcel={demoParcel.get('min').modify(numberToString())} debounce={100}>
                 {(parcel) => <Input
                     {...parcel.spread()}
                     type="number"

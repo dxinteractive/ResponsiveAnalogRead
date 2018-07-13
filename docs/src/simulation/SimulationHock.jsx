@@ -10,6 +10,7 @@ import Simulation from './Simulation';
 
 type Props = {
     demoParcel: Parcel,
+    simulationParcel: Parcel,
     wasmExports: ?WasmExports
 };
 
@@ -34,9 +35,12 @@ export default () => (Component: ComponentType<Props>): ComponentType<Props> => 
         }
 
         handleTick = (tick: SimulationTick) => {
-            this.props.demoParcel.batch((parcel: Parcel) => {
+            this.props.simulationParcel.batch((parcel: Parcel) => {
                 parcel.set('output', tick.output);
                 parcel.set('raw', tick.raw);
+                parcel.set('hasChanged', tick.hasChanged);
+                parcel.set('isSettled', tick.isSettled);
+                parcel.set('isAboveNoiseFloor', tick.isAboveNoiseFloor);
             });
         };
 

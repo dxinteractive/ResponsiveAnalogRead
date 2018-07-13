@@ -12,7 +12,8 @@ import {Box, Grid, GridItem} from 'dcme-style';
 type Props = {
     demoParcel: Parcel,
     height: number,
-    layout?: ComponentType
+    layout?: ComponentType,
+    simulationParcel: Parcel
 };
 
 type LayoutProps = {
@@ -24,11 +25,11 @@ type LayoutProps = {
 
 export default class DemoControlStructure extends Structure<Props> {
 
-    renderSlider = ({field, label, ...otherProps}: *): Node => {
+    renderSlider = ({valueParcel, label, ...otherProps}: *): Node => {
         let {demoParcel, height} = this.props;
         let {min, max} = demoParcel.value();
         return <DemoSliderStructure
-            valueParcel={demoParcel.get(field)}
+            valueParcel={valueParcel}
             height={height}
             label={label}
             min={min}
@@ -52,8 +53,8 @@ export default class DemoControlStructure extends Structure<Props> {
 
     input = (): Node => {
         return this.renderSlider({
-            field: 'input',
-            label: 'Control'
+            label: 'control',
+            valueParcel: this.props.demoParcel.get('input')
         });
     };
 
@@ -69,7 +70,7 @@ export default class DemoControlStructure extends Structure<Props> {
         return <DemoSliderStructure
             valueParcel={demoParcel.get('noise').modify(numberToFloor(0.1), numberToExp(curve))}
             height={height}
-            label="Noise"
+            label="noise"
             min={exp(curve)(0.04)}
             max={sliderMax}
             step={sliderMax / range}
@@ -79,17 +80,17 @@ export default class DemoControlStructure extends Structure<Props> {
 
     raw = (): Node => {
         return this.renderSlider({
-            field: 'raw',
-            label: 'Raw',
-            disabled: true
+            label: 'raw',
+            disabled: true,
+            valueParcel: this.props.simulationParcel.get('raw')
         });
     };
 
     output = (): Node => {
         return this.renderSlider({
-            field: 'output',
-            label: 'Output',
-            disabled: true
+            label: 'output',
+            disabled: true,
+            valueParcel: this.props.simulationParcel.get('output')
         });
     };
 }

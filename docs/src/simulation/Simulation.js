@@ -18,10 +18,13 @@ const DEFAULT_STATE = {
     min: 0,
     max: 1023,
     noisefloor: 0,
-    glide: 0,
-    smooth: true,
-    settle: true,
-    doubleRead: false
+    glide: 2,
+    smooth: 100,
+    settle: 2,
+    glideEnabled: true,
+    smoothEnabled: true,
+    settleEnabled: true,
+    doubleReadEnabled: false
 };
 
 export default class Simulation {
@@ -58,17 +61,20 @@ export default class Simulation {
     updateSettings = () => {
         let {
             noisefloor,
-            smooth,
+            glideEnabled,
+            smoothEnabled,
+            settleEnabled,
+            doubleReadEnabled,
             glide,
-            settle,
-            doubleRead
+            smooth,
+            settle
         } = this.state;
 
-        this._analog.noisefloor_float(noisefloor);
-        this._analog.smooth(smooth);
-        this._analog.glide(glide);
-        this._analog.settle(settle);
-        this._analog.doubleRead(doubleRead);
+        this._analog.noiseFloor(noisefloor);
+        this._analog.glide(glideEnabled ? glide : 0);
+        this._analog.smooth(smoothEnabled ? smooth : 0);
+        this._analog.settle(settleEnabled ? settle : 0);
+        this._analog.doubleRead(doubleReadEnabled);
     };
 
     addOnTickListener = (onTick: Function) => {
@@ -121,7 +127,10 @@ export default class Simulation {
             let tick = new SimulationTick({
                 input,
                 raw: this._analog.raw(),
-                output: this._analog.value()
+                output: this._analog.value(),
+                hasChanged: this._analog.hasChanged(),
+                isSettled: this._analog.isSettled(),
+                isAboveNoiseFloor: this._analog.isAboveNoiseFloor()
             });
 
             this._bufferMap.forEach((buffer: Array<SimulationTick>) => {

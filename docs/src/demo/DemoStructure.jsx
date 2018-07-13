@@ -5,6 +5,7 @@ import type Parcel from 'parcels-react';
 import type Simulation from '../simulation/Simulation';
 
 import React from 'react';
+import {PureParcel} from 'parcels-react';
 import {Box, Grid, GridItem, Text} from 'dcme-style';
 import DemoControlView from './DemoControlView';
 import Structure from '../component/Structure';
@@ -18,6 +19,7 @@ type Props = {
     demoParcel: Parcel,
     layout?: ComponentType,
     simulation: Simulation,
+    simulationParcel: Parcel,
     sliderHeight: number
 };
 
@@ -30,14 +32,15 @@ type LayoutProps = {
     graphTitle: () => Node,
     control: () => Node,
     legend: () => Node,
+    statuses: () => Node,
     warning: () => Node
 };
 
 export default class DemoStructure extends Structure<Props> {
 
-    static elements = ['code', 'codeSettings', 'codeTitle', 'graph', 'graphSettings', 'graphTitle', 'control', 'legend', 'warning'];
+    static elements = ['code', 'codeSettings', 'codeTitle', 'graph', 'graphSettings', 'graphTitle', 'control', 'legend', 'statuses', 'warning'];
 
-    static layout = ({code, codeSettings, codeTitle, graph, graphSettings, graphTitle, control, legend, warning}: LayoutProps): Node => {
+    static layout = ({code, codeSettings, codeTitle, graph, graphSettings, graphTitle, control, legend, statuses, warning}: LayoutProps): Node => {
         return <Box>
             <Box modifier="marginBottomKilo">
                 <Box modifier="marginBottomMilli">
@@ -51,10 +54,17 @@ export default class DemoStructure extends Structure<Props> {
                     <GridItem modifier="padding shrink">{control()}</GridItem>
                 </Grid>
             </Box>
-            <Grid>
-                <GridItem modifier="padding 6">{legend()}</GridItem>
-                <GridItem modifier="padding 6">{warning()}</GridItem>
-            </Grid>
+            <Box modifier="marginBottomKilo">
+                <Grid modifier="auto">
+                    <GridItem modifier="padding shrink">
+                        <Box modifier="paddingLeft">{legend()}</Box>
+                    </GridItem>
+                    <GridItem modifier="padding">
+                        <Box modifier="paddingLeft">{statuses()}</Box>
+                    </GridItem>
+                    <GridItem modifier="padding 1">{warning()}</GridItem>
+                </Grid>
+            </Box>
             <Grid>
                 <GridItem modifier="padding 6">{code()}</GridItem>
                 <GridItem modifier="padding 6">{codeTitle()}{codeSettings()}</GridItem>
@@ -63,8 +73,10 @@ export default class DemoStructure extends Structure<Props> {
     };
 
     code = (): Node => {
-        let code = DemoCode(this.props.demoParcel.value());
-        return <Code modifier="code">{code}</Code>;
+        let {demoParcel} = this.props;
+        return <PureParcel parcel={demoParcel}>
+            {(parcel) => <Code modifier="code">{DemoCode(parcel)}</Code>}
+        </PureParcel>;
     };
 
     codeSettings = (): Node => {
@@ -108,15 +120,38 @@ export default class DemoStructure extends Structure<Props> {
     };
 
     control = (): Node => {
-        let {demoParcel, sliderHeight} = this.props;
+        let {
+            demoParcel,
+            simulationParcel,
+            sliderHeight
+        } = this.props;
+
         return <DemoControlView
             demoParcel={demoParcel}
+            simulationParcel={simulationParcel}
             height={sliderHeight}
         />;
     };
 
     legend = (): Node => {
-        return null;
+        return <Text element="div" modifier="monospace"><Text modifier="tertiary">■</Text> <Text modifier="sizeMilli">raw</Text> <Text modifier="primary">■</Text> <Text modifier="sizeMilli">output</Text></Text>;
+    };
+
+    statuses = (): Node => {
+        let {simulationParcel} = this.props;
+        let {
+            hasChanged,
+            isSettled,
+            isAboveNoiseFloor
+        } = simulationParcel.value();
+
+        return <Text element="div" modifier="monospace">
+            <Text modifier="weightMilli sizeMilli">
+                hasChanged [{hasChanged ? "x" : " "}]
+                isSettled [{isSettled ? "x" : " "}]
+                isAboveNoiseFloor [{isAboveNoiseFloor ? "x" : " "}]
+            </Text>
+        </Text>;
     };
 
     warning = (): Node => {
