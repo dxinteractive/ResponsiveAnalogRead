@@ -36,26 +36,22 @@ class ResponsiveAnalogRead
             _pin = pin;
         }
 
-        void noisefloor(int noisefloor) {
-            this->noisefloor((float)noisefloor);
+        void noisefloor(int value) {
+            this->noisefloor((float)value);
         }
 
-        void noisefloor(float noisefloor) {
-            _noisefloor = noisefloor;
-            //_snap = 1.0 / (float)noisefloor;
+        void noisefloor(float value) {
+            _noisefloor = value;
+            _smoothSnap = 0.01 / _noisefloor;
+        }
+
+        void glide(float amount) {
+            _glide = amount;
+            _glideSnap = 1.0 / (amount + 1.0);
         }
 
         void smooth(bool enable = true) {
             _smooth = enable;
-        }
-
-        void smooth(float snap) {
-            //_snap = snap;
-            _smooth = true;
-        }
-
-        void quick(bool enable = true) {
-            _quick = enable;
         }
 
         void settle(bool enable = true) {
@@ -67,7 +63,9 @@ class ResponsiveAnalogRead
         }
 
         void read() {
-            if(_doubleRead) analogRead(_pin);
+            if(_doubleRead) {
+                analogRead(_pin);
+            }
             read((float)analogRead(_pin));
         }
 
@@ -113,13 +111,15 @@ class ResponsiveAnalogRead
         int _pin;
 
         bool _smooth;
-        bool _quick;
         bool _settle;
         bool _doubleRead;
 
         float _input;
         float _output;
         float _noisefloor;
+        float _smoothSnap = 1.0;
+        float _glide = 0.0;
+        float _glideSnap = 1.0;
         float _prevOutput;
 
         bool _hasRead = false;
@@ -131,12 +131,12 @@ class ResponsiveAnalogRead
                 diff = -diff;
             }
 
-            if(!_smooth || (_quick && diff >= _noisefloor)) {
-                _output = _input;
+            if(_smooth && diff < _noisefloor) {
+                _output = _output + (_input - _output) * _snapCurve(diff * _smoothSnap);
                 return;
             }
-            float snap =_snapCurve(diff * 0.01 / _noisefloor);
-            _output = _output + (_input - _output) * snap;
+
+            _output = _output + (_input - _output) * _glideSnap;
         }
 
         float _snapCurve(float x) {
