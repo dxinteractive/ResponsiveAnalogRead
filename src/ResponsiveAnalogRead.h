@@ -36,26 +36,29 @@ class ResponsiveAnalogRead
             _pin = pin;
         }
 
-        void noisefloor(int value) {
-            this->noisefloor((float)value);
+        void noiseFloor(int value) {
+            this->noiseFloor((float)value);
         }
 
-        void noisefloor(float value) {
-            _noisefloor = value;
-            _smoothSnap = 0.01 / _noisefloor;
+        void noiseFloor(float value) {
+            _noiseFloor = value;
+            _updateSmoothTensionAdjusted();
         }
 
-        void glide(float amount) {
+        void glide(float amount = 1.0) {
             _glide = amount;
-            _glideSnap = 1.0 / (amount + 1.0);
+            _glideTension = _toTension(amount * 5.0);
         }
 
-        void smooth(bool enable = true) {
-            _smooth = enable;
+        void smooth(float amount = 1.0) {
+            _smooth = amount;
+            _smoothTension = _toTension(amount * 10.0);
+            _updateSmoothTensionAdjusted();
         }
 
-        void settle(bool enable = true) {
-            _settle = enable;
+        void settle(float amount = 1.0) {
+            _settle = amount;
+            _settleTension = _toTension(amount);
         }
 
         void doubleRead(bool enable = true) {
@@ -76,19 +79,27 @@ class ResponsiveAnalogRead
         void read(float value) {
             _prevOutput = _output;
             _input = value;
-            if(!_hasRead) {
+            if(_reads == 0) {
                 _output = value;
-                _hasRead = true;
+                _reads++;
                 return;
             }
-            if(!_hasReadTwice) {
-                _hasReadTwice = true;
+            if(_reads == 1) {
+                _reads++;
             }
-            _calculate();
+            _updateOutput();
         }
 
         bool hasChanged() {
-            return !_hasReadTwice || _prevOutput != _output;
+            return _reads < 2 || _prevOutput != _output;
+        }
+
+        bool isAboveNoiseFloor() {
+            return _isAboveNoiseFloor;
+        }
+
+        bool isSettled() {
+            return _isSettled;
         }
 
         int raw() {
@@ -108,44 +119,73 @@ class ResponsiveAnalogRead
         }
 
     private:
+        // config
         int _pin;
-
-        bool _smooth;
-        bool _settle;
         bool _doubleRead;
 
+        // state
         float _input;
         float _output;
-        float _noisefloor;
-        float _smoothSnap = 1.0;
-        float _glide = 0.0;
-        float _glideSnap = 1.0;
         float _prevOutput;
+        int _reads;
 
-        bool _hasRead = false;
-        bool _hasReadTwice = false;
+        // algorithm params
+        float _noiseFloor;
+        float _smooth;
+        float _smoothTension = 1.0;
+        float _smoothTensionAdjusted = 1.0;
+        float _glide;
+        float _glideTension = 1.0;
+        float _settle;
+        float _settleTension = 1.0;
+        float _settleError = 0.0;
+        bool _isAboveNoiseFloor;
+        bool _isSettled;
 
-        void _calculate() {
-            float diff = _output - _input;
-            if(diff < 0.0) {
-                diff = -diff;
-            }
-
-            if(_smooth && diff < _noisefloor) {
-                _output = _output + (_input - _output) * _snapCurve(diff * _smoothSnap);
-                return;
-            }
-
-            _output = _output + (_input - _output) * _glideSnap;
+        float _toTension(float amount) {
+            return 1.0 / (amount + 1.0);
         }
 
-        float _snapCurve(float x) {
+        void _updateSmoothTensionAdjusted() {
+            if(_noiseFloor > 0.0) {
+                _smoothTensionAdjusted = _smoothTension / _noiseFloor;
+            }
+        }
+
+        void _updateOutput() {
+            float diff = _abs(_output - _input);
+
+            _isAboveNoiseFloor = diff > _noiseFloor * 3.0;
+
+            if(_settle > 0.0) {
+                _settleError += (diff - _settleError) * _settleTension;
+                _isSettled = _abs(_settleError) < _noiseFloor;
+            } else {
+                _isSettled = false;
+            }
+
+            float tension = _tensionCurve(diff * _smoothTensionAdjusted);
+            if(_glide > 0.0 && _glideTension < tension) {
+                tension = _glideTension;
+            }
+
+            _output = _output + (_input - _output) * tension;
+        }
+
+        float _tensionCurve(float x) {
             float y = 1.0 / (x + 1.0);
             y = (1.0 - y) * 2.0;
             if(y > 1.0) {
                 return 1.0;
             }
             return y;
+        }
+
+        float _abs(float value) {
+            if(value < 0.0) {
+                return -value;
+            }
+            return value;
         }
 };
 
