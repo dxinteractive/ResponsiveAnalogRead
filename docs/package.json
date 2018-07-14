@@ -10,7 +10,7 @@
     "bruce": "^5.0.0",
     "buffer-loader": "^0.0.1",
     "chart.js": "^2.7.2",
-    "dcme-style": "^0.12.0",
+    "dcme-style": "^0.12.1",
     "gatsby": "^1.9.247",
     "gatsby-link": "^1.6.40",
     "gatsby-plugin-react-helmet": "^2.0.10",
