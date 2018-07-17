@@ -130,7 +130,7 @@ export default class Simulation {
                 output: this._analog.value(),
                 hasChanged: this._analog.hasChanged(),
                 isSettled: this._analog.isSettled(),
-                isAboveNoiseFloor: this._analog.isAboveNoiseFloor()
+                tension: this._analog.tension()
             });
 
             this._bufferMap.forEach((buffer: Array<SimulationTick>) => {

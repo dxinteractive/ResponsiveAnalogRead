@@ -142,14 +142,14 @@ export default class DemoStructure extends Structure<Props> {
         let {
             hasChanged,
             isSettled,
-            isAboveNoiseFloor
+            tension
         } = simulationParcel.value();
 
         return <Text element="div" modifier="monospace">
             <Text modifier="weightMilli sizeMilli">
                 hasChanged [{hasChanged ? "x" : " "}]
                 isSettled [{isSettled ? "x" : " "}]
-                isAboveNoiseFloor [{isAboveNoiseFloor ? "x" : " "}]
+                tension {tension.toFixed(4)}
             </Text>
         </Text>;
     };

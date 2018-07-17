@@ -40,7 +40,7 @@ export default () => (Component: ComponentType<Props>): ComponentType<Props> => 
                 parcel.set('raw', tick.raw);
                 parcel.set('hasChanged', tick.hasChanged);
                 parcel.set('isSettled', tick.isSettled);
-                parcel.set('isAboveNoiseFloor', tick.isAboveNoiseFloor);
+                parcel.set('tension', tick.tension);
             });
         };
 

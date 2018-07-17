@@ -40,7 +40,7 @@ export default composeWith(
             output: 0,
             hasChanged: false,
             isSettled: false,
-            isAboveNoiseFloor: false
+            tension: 0
         }),
         prop: "simulationParcel"
     }),

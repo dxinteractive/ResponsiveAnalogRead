@@ -6,7 +6,7 @@ export default class SimulationTick {
     output: number;
     hasChanged: boolean;
     isSettled: boolean;
-    isAboveNoiseFloor: boolean;
+    tension: number;
 
     constructor(props: *) {
         this.input = props.input;
@@ -14,7 +14,7 @@ export default class SimulationTick {
         this.output = props.output;
         this.hasChanged = props.hasChanged;
         this.isSettled = props.isSettled;
-        this.isAboveNoiseFloor = props.isAboveNoiseFloor;
+        this.tension = props.tension;
     }
 
     toJS(): * {
@@ -24,7 +24,7 @@ export default class SimulationTick {
             output: this.output,
             hasChanged: this.hasChanged,
             isSettled: this.isSettled,
-            isAboveNoiseFloor: this.isAboveNoiseFloor
+            tension: this.tension
         };
     }
 }

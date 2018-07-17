@@ -19,7 +19,8 @@ type DataPoint = {
     output: number,
     input: number,
     raw: number,
-    x: number
+    x: number,
+    tension: number
 };
 
 type Props = {
@@ -58,9 +59,6 @@ let createOptions = ({cameraY, range, zoom}) => ({
         }]
     },
     elements: {
-        line: {
-            tension: 0
-        },
         point: {
             radius: 0
         }
@@ -112,7 +110,8 @@ export default class Graph extends React.Component<Props, State> {
                     x,
                     input: null,
                     output: null,
-                    raw: null
+                    raw: null,
+                    tension: null
                 }))
             )
         };
@@ -130,7 +129,10 @@ export default class Graph extends React.Component<Props, State> {
 
         data = pipeWith(
             data,
-            concat(buffer.map(_ => _.toJS())),
+            concat(buffer.map(point => ({
+                ...point.toJS(),
+                tension: point.tension * 20
+            }))),
             takeLast(DATA_POINTS),
             map((data, x) => ({...data, x}))
         );
@@ -188,6 +190,11 @@ export default class Graph extends React.Component<Props, State> {
                 data,
                 key: "raw",
                 color: Colors.tertiary
+            }),
+            createDataset({
+                data,
+                key: "tension",
+                color: Colors.secondary
             })
         ];
 

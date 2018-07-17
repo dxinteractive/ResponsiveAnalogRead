@@ -18,12 +18,12 @@ EMSCRIPTEN_BINDINGS(my_class_example) {
     .function("read_int", select_overload<void(int)>(&ResponsiveAnalogRead::read))
     .function("read_float", select_overload<void(float)>(&ResponsiveAnalogRead::read))
     .function("hasChanged", &ResponsiveAnalogRead::hasChanged)
-    .function("isAboveNoiseFloor", &ResponsiveAnalogRead::isAboveNoiseFloor)
     .function("isSettled", &ResponsiveAnalogRead::isSettled)
     .function("raw", &ResponsiveAnalogRead::raw)
     .function("rawFloat", &ResponsiveAnalogRead::rawFloat)
     .function("value", &ResponsiveAnalogRead::value)
     .function("valueFloat", &ResponsiveAnalogRead::valueFloat)
+    .function("tension", &ResponsiveAnalogRead::tension)
   ;
   function("setMillis", &setMillis);
   function("setAnalogReadValue", &setAnalogReadValue);
