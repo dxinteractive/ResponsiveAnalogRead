@@ -20,7 +20,8 @@ type DataPoint = {
     input: number,
     raw: number,
     x: number,
-    tension: number
+    tension: number,
+    speed: number
 };
 
 type Props = {
@@ -111,7 +112,8 @@ export default class Graph extends React.Component<Props, State> {
                     input: null,
                     output: null,
                     raw: null,
-                    tension: null
+                    tension: null,
+                    speed: null
                 }))
             )
         };
@@ -195,6 +197,11 @@ export default class Graph extends React.Component<Props, State> {
                 data,
                 key: "tension",
                 color: Colors.secondary
+            }),
+            createDataset({
+                data,
+                key: "speed",
+                color: Colors.tertiary
             })
         ];
 

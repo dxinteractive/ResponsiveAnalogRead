@@ -7,6 +7,7 @@ export default class SimulationTick {
     hasChanged: boolean;
     isSettled: boolean;
     tension: number;
+    speed: number;
 
     constructor(props: *) {
         this.input = props.input;
@@ -15,6 +16,7 @@ export default class SimulationTick {
         this.hasChanged = props.hasChanged;
         this.isSettled = props.isSettled;
         this.tension = props.tension;
+        this.speed = props.speed;
     }
 
     toJS(): * {
@@ -24,7 +26,8 @@ export default class SimulationTick {
             output: this.output,
             hasChanged: this.hasChanged,
             isSettled: this.isSettled,
-            tension: this.tension
+            tension: this.tension,
+            speed: this.speed
         };
     }
 }

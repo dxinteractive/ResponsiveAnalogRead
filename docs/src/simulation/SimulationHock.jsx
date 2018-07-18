@@ -41,6 +41,7 @@ export default () => (Component: ComponentType<Props>): ComponentType<Props> => 
                 parcel.set('hasChanged', tick.hasChanged);
                 parcel.set('isSettled', tick.isSettled);
                 parcel.set('tension', tick.tension);
+                parcel.set('speed', tick.speed);
             });
         };
 

@@ -130,7 +130,8 @@ export default class Simulation {
                 output: this._analog.value(),
                 hasChanged: this._analog.hasChanged(),
                 isSettled: this._analog.isSettled(),
-                tension: this._analog.tension()
+                tension: this._analog.tension(),
+                speed: this._analog.speed()
             });
 
             this._bufferMap.forEach((buffer: Array<SimulationTick>) => {

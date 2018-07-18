@@ -40,7 +40,8 @@ export default composeWith(
             output: 0,
             hasChanged: false,
             isSettled: false,
-            tension: 0
+            tension: 0,
+            speed: 0
         }),
         prop: "simulationParcel"
     }),

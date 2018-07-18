@@ -116,6 +116,10 @@ class ResponsiveAnalogRead
             return _tension;
         }
 
+        float speed() {
+            return _abs(_acceleration);
+        }
+
     private:
         // config
         int _pin;
@@ -138,7 +142,10 @@ class ResponsiveAnalogRead
         float _settleTension = 1.0;
         float _settleError = 0.0;
         float _tension = 1.0;
-        float _diff;
+        float _velocity;
+        float _velocitySmoothed;
+        float _acceleration;
+        float _prevVelocity;
         bool _isSettled;
 
         float _toTension(float amount) {
@@ -146,22 +153,33 @@ class ResponsiveAnalogRead
         }
 
         void _updateOutput() {
-            float diff = _abs(_output - _input);
+            _prevVelocity = _velocity;
+            _velocity = _output - _input;
 
-            if(_settle > 0.0) {
-                _settleError += (diff - _settleError) * _settleTension;
-                _isSettled = _abs(_settleError) < _noiseFloor;
+
+            // if(_settle > 0.0) {
+            //     _settleError += (speed - _settleError) * _settleTension;
+            //     _isSettled = _abs(_settleError) < _noiseFloor;
+            // } else {
+            //     _isSettled = false;
+            // }
+
+            _velocitySmoothed += (_velocity - _velocitySmoothed) * 0.25;
+            float acceleration = _velocitySmoothed - _prevVelocity;
+            _acceleration = acceleration;
+
+            float velocityTension = _calculateTension(acceleration, _noiseFloor * 0.5, _noiseFloor * 2.0, _smoothTension / _noiseFloor);
+            if(velocityTension > 1.0) {
+                velocityTension = 1.0;
+            }
+            _velocitySmoothed += (_velocity - _velocitySmoothed) * velocityTension;
+
+            if(_noiseFloor > 0.0) {
+                _tension = _calculateTension(_velocitySmoothed, _noiseFloor * 0.5, _noiseFloor * 2.0, _smoothTension / _noiseFloor);
             } else {
-                _isSettled = false;
+                _tension = 1.0;
             }
 
-            if(diff > _diff) {
-                _diff = diff;
-            } else {
-                _diff += (diff - _diff) * 0.25;
-            }
-
-            _tension = _calculateTension(_diff, _noiseFloor * 0.5, _noiseFloor * 3.0, _smoothTension / _noiseFloor);
             if(_tension > 1.0) {
                 _tension = 1.0;
             }
@@ -174,21 +192,13 @@ class ResponsiveAnalogRead
         }
 
         float _calculateTension(float x, float lowX, float highX, float lowTension) {
+            x = _abs(x);
             if(x < lowX) {
                 return lowTension;
             }
             float m = (x - lowX) / (highX - lowX);
-            return m * m * (1.0 - lowTension) + lowTension;
+            return m * (1.0 - lowTension) + lowTension;
         }
-
-        // float _tensionCurve(float x) {
-        //     float y = 1.0 / (x + 1.0);
-        //     y = (1.0 - y) * 2.0;
-        //     if(y > 1.0) {
-        //         return 1.0;
-        //     }
-        //     return y;
-        // }
 
         float _abs(float value) {
             if(value < 0.0) {

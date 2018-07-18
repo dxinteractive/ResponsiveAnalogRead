@@ -24,6 +24,7 @@ EMSCRIPTEN_BINDINGS(my_class_example) {
     .function("value", &ResponsiveAnalogRead::value)
     .function("valueFloat", &ResponsiveAnalogRead::valueFloat)
     .function("tension", &ResponsiveAnalogRead::tension)
+    .function("speed", &ResponsiveAnalogRead::speed)
   ;
   function("setMillis", &setMillis);
   function("setAnalogReadValue", &setAnalogReadValue);
