@@ -44,8 +44,9 @@ void ResponsiveAnalogRead::update()
   this->update(rawValue);
 }
 
-void ResponsiveAnalogRead::update(int rawValue)
+void ResponsiveAnalogRead::update(int rawValueRead)
 {
+  rawValue = rawValueRead;
   prevResponsiveValue = responsiveValue;
   responsiveValue = getResponsiveValue(rawValue);
   responsiveValueHasChanged = responsiveValue != prevResponsiveValue;
