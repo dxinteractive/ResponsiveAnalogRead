@@ -44,7 +44,7 @@ void ResponsiveAnalogRead::update()
   this->update(rawValue);
 }
 
-void ResponsiveAnalogRead::update(int rawValueRead)
+void ResponsiveAnalogRead::update(double rawValueRead)
 {
   rawValue = rawValueRead;
   prevResponsiveValue = responsiveValue;
@@ -52,7 +52,7 @@ void ResponsiveAnalogRead::update(int rawValueRead)
   responsiveValueHasChanged = responsiveValue != prevResponsiveValue;
 }
 
-int ResponsiveAnalogRead::getResponsiveValue(int newValue)
+int ResponsiveAnalogRead::getResponsiveValue(double newValue)
 {
   // if sleep and edge snap are enabled and the new value is very close to an edge, drag it a little closer to the edges
   // This'll make it easier to pull the output values right to the extremes without sleeping,
@@ -83,7 +83,7 @@ int ResponsiveAnalogRead::getResponsiveValue(int newValue)
   // then don't update responsiveValue this loop
   // just output the existing responsiveValue
   if(sleepEnable && sleeping) {
-    return (int)smoothValue;
+    return (double)smoothValue;
   }
 
   // use a 'snap curve' function, where we pass in the diff (x) and get back a number from 0-1.
@@ -115,7 +115,7 @@ int ResponsiveAnalogRead::getResponsiveValue(int newValue)
   }
 
   // expected output is an integer
-  return (int)smoothValue;
+  return (double)smoothValue;
 }
 
 float ResponsiveAnalogRead::snapCurve(float x)
