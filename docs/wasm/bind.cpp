@@ -12,7 +12,8 @@ EMSCRIPTEN_BINDINGS(my_class_example) {
     .function("noiseFloor_int", select_overload<void(int)>(&ResponsiveAnalogRead::noiseFloor))
     .function("glide", &ResponsiveAnalogRead::glide)
     .function("smooth", &ResponsiveAnalogRead::smooth)
-    .function("settle", &ResponsiveAnalogRead::settle)
+    .function("settle_int", select_overload<void(int, int)>(&ResponsiveAnalogRead::settle))
+    .function("settle_float", select_overload<void(int, float)>(&ResponsiveAnalogRead::settle))
     .function("doubleRead", &ResponsiveAnalogRead::doubleRead)
     .function("read", select_overload<void()>(&ResponsiveAnalogRead::read))
     .function("read_int", select_overload<void(int)>(&ResponsiveAnalogRead::read))
@@ -24,7 +25,6 @@ EMSCRIPTEN_BINDINGS(my_class_example) {
     .function("value", &ResponsiveAnalogRead::value)
     .function("valueFloat", &ResponsiveAnalogRead::valueFloat)
     .function("tension", &ResponsiveAnalogRead::tension)
-    .function("speed", &ResponsiveAnalogRead::speed)
   ;
   function("setMillis", &setMillis);
   function("setAnalogReadValue", &setAnalogReadValue);

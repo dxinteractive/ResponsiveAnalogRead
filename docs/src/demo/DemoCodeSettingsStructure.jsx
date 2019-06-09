@@ -20,7 +20,8 @@ type LayoutProps = {
     noisefloor: () => Node,
     glide: () => Node,
     smooth: () => Node,
-    settle: () => Node,
+    settleTime: () => Node,
+    settleThreshold: () => Node,
     glideEnabled: () => Node,
     smoothEnabled: () => Node,
     settleEnabled: () => Node,
@@ -29,7 +30,7 @@ type LayoutProps = {
 
 export default class DemoCodeSettingsStructure extends Structure<Props> {
 
-    renderSlider = ({field, label}: *): Node => {
+    renderSlider = ({field, label, enabled, decimal = 1}: *): Node => {
         let {demoParcel, sliderHeight} = this.props;
         let curve = 5;
         let range = 50;
@@ -37,23 +38,23 @@ export default class DemoCodeSettingsStructure extends Structure<Props> {
         let value = demoParcel
             .get(field)
             .value()
-            .toFixed(1);
+            .toFixed(decimal);
 
         return <DemoSliderStructure
-            valueParcel={demoParcel.get(field).modify(numberToFloor(0.1), numberToExp(curve))}
+            valueParcel={demoParcel.get(field).modify(numberToFloor(Math.pow(10,-decimal)), numberToExp(curve))}
             height={sliderHeight}
             label={label}
             min={exp(curve)(0.04)}
             max={sliderMax}
             step={sliderMax / range}
             value={value}
-            disabled={!demoParcel.get(`${field}Enabled`).value()}
+            disabled={!demoParcel.get(enabled).value()}
         />;
     };
 
     renderToggle = ({field, label}: *): Node => {
         let {demoParcel} = this.props;
-        return <Text element="div" modifier="marginBottom">
+        return <Text element="div" modifier="margin">
             <label>
                 <PureParcel parcel={demoParcel.get(field)}>
                     {(parcel) => <Toggle {...parcel.spread()} modifier="checkbox">{label}</Toggle>}
@@ -62,9 +63,9 @@ export default class DemoCodeSettingsStructure extends Structure<Props> {
         </Text>;
     };
 
-    static elements = ['noisefloor', 'glide', 'smooth', 'settle', 'doubleReadEnabled', 'glideEnabled', 'smoothEnabled', 'settleEnabled'];
+    static elements = ['noisefloor', 'glide', 'smooth', 'settleTime', 'settleThreshold', 'doubleReadEnabled', 'glideEnabled', 'smoothEnabled', 'settleEnabled'];
 
-    static layout = ({noisefloor, glide, smooth, settle, doubleReadEnabled, glideEnabled, smoothEnabled, settleEnabled}: LayoutProps): Node => {
+    static layout = ({noisefloor, glide, smooth, settleTime, settleThreshold, doubleReadEnabled, glideEnabled, smoothEnabled, settleEnabled}: LayoutProps): Node => {
         return <Box>
             <Grid modifier="auto">
                 <GridItem modifier="shrink paddingMilli">
@@ -76,7 +77,8 @@ export default class DemoCodeSettingsStructure extends Structure<Props> {
                 <GridItem modifier="shrink paddingMilli">{noisefloor()}</GridItem>
                 <GridItem modifier="shrink paddingMilli">{glide()}</GridItem>
                 <GridItem modifier="shrink paddingMilli">{smooth()}</GridItem>
-                <GridItem modifier="shrink paddingMilli">{settle()}</GridItem>
+                <GridItem modifier="shrink paddingMilli">{settleTime()}</GridItem>
+                <GridItem modifier="shrink paddingMilli">{settleThreshold()}</GridItem>
                 <GridItem />
             </Grid>
         </Box>;
@@ -107,21 +109,33 @@ export default class DemoCodeSettingsStructure extends Structure<Props> {
     glide = (): Node => {
         return this.renderSlider({
             field: 'glide',
-            label: 'glide'
+            label: 'glide',
+            enabled: 'glideEnabled'
         });
     };
 
     smooth = (): Node => {
         return this.renderSlider({
             field: 'smooth',
-            label: 'smooth'
+            label: 'smooth',
+            enabled: 'smoothEnabled'
         });
     };
 
-    settle = (): Node => {
+    settleTime = (): Node => {
         return this.renderSlider({
-            field: 'settle',
-            label: 'settle'
+            field: 'settleTime',
+            label: 'settleTime',
+            enabled: 'settleEnabled',
+            decimal: 0
+        });
+    };
+
+    settleThreshold = (): Node => {
+        return this.renderSlider({
+            field: 'settleThreshold',
+            label: 'settleThreshold',
+            enabled: 'settleEnabled'
         });
     };
 

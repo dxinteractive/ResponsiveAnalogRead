@@ -92,7 +92,7 @@ export default class DemoStructure extends Structure<Props> {
     };
 
     codeTitle = (): Node => {
-        return <Text element="h3" modifier="sizeKilo marginBottomKilo">Settings</Text>;
+        return <Text element="h3" modifier="sizeKilo marginKilo">Settings</Text>;
     };
 
     graph = (): Node => {
@@ -142,8 +142,7 @@ export default class DemoStructure extends Structure<Props> {
         let {
             hasChanged,
             isSettled,
-            tension,
-            speed
+            tension
         } = simulationParcel.value();
 
         return <Text element="div" modifier="monospace">
@@ -151,7 +150,6 @@ export default class DemoStructure extends Structure<Props> {
                 hasChanged [{hasChanged ? "x" : " "}]
                 isSettled [{isSettled ? "x" : " "}]
                 tension {tension.toFixed(4)}
-                speed {speed.toFixed(4)}
             </Text>
         </Text>;
     };

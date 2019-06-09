@@ -20,7 +20,8 @@ const DEFAULT_STATE = {
     noisefloor: 0,
     glide: 2,
     smooth: 100,
-    settle: 2,
+    settleTime: 3,
+    settleThreshold: 1,
     glideEnabled: true,
     smoothEnabled: true,
     settleEnabled: true,
@@ -67,13 +68,14 @@ export default class Simulation {
             doubleReadEnabled,
             glide,
             smooth,
-            settle
+            settleTime,
+            settleThreshold
         } = this.state;
 
         this._analog.noiseFloor(noisefloor);
         this._analog.glide(glideEnabled ? glide : 0);
         this._analog.smooth(smoothEnabled ? smooth : 0);
-        this._analog.settle(settleEnabled ? settle : 0);
+        this._analog.settle_float(settleTime, settleEnabled ? settleThreshold : 0);
         this._analog.doubleRead(doubleReadEnabled);
     };
 
@@ -130,8 +132,7 @@ export default class Simulation {
                 output: this._analog.value(),
                 hasChanged: this._analog.hasChanged(),
                 isSettled: this._analog.isSettled(),
-                tension: this._analog.tension(),
-                speed: this._analog.speed()
+                tension: this._analog.tension()
             });
 
             this._bufferMap.forEach((buffer: Array<SimulationTick>) => {

@@ -38,25 +38,33 @@ class ResponsiveAnalogRead
 
         void noiseFloor(int value) {
             this->noiseFloor((float)value);
+            _calculateLowTension();
         }
 
         void noiseFloor(float value) {
             _noiseFloor = value;
+            __lowX = value * 0.5;
+            __highX = value * 2.0;
         }
 
         void glide(float amount = 1.0) {
             _glide = amount;
-            _glideTension = _toTension(amount * 5.0);
+            __glideTension = _toTension(amount * 5.0);
         }
 
         void smooth(float amount = 1.0) {
             _smooth = amount;
-            _smoothTension = _toTension(amount * 10.0);
+            __smoothTension = _toTension(amount * 10.0);
+            _calculateLowTension();
         }
 
-        void settle(float amount = 1.0) {
-            _settle = amount;
-            _settleTension = _toTension(amount);
+        void settle(int time, int threshold) {
+            settle(time, (float)threshold);
+        }
+
+        void settle(int time, float threshold = 1.0) {
+            _settleTime = time;
+            _settleThreshold = threshold;
         }
 
         void doubleRead(bool enable = true) {
@@ -75,7 +83,7 @@ class ResponsiveAnalogRead
         }
 
         void read(float value) {
-            _prevOutput = _output;
+            _prevOutputAfterSettle = _outputAfterSettle;
             _input = value;
             if(_reads == 0) {
                 _output = value;
@@ -89,7 +97,11 @@ class ResponsiveAnalogRead
         }
 
         bool hasChanged() {
-            return _reads < 2 || _prevOutput != _output;
+            return _reads < 2 || (int)_prevOutputAfterSettle != (int)_outputAfterSettle;
+        }
+
+        bool hasChangedFloat() {
+            return _reads < 2 || _prevOutputAfterSettle != _outputAfterSettle;
         }
 
         bool isSettled() {
@@ -105,19 +117,15 @@ class ResponsiveAnalogRead
         }
 
         int value() {
-            return (int)_output;
+            return (int)_outputAfterSettle;
         }
 
         float valueFloat() {
-            return _output;
+            return _outputAfterSettle;
         }
 
         float tension() {
             return _tension;
-        }
-
-        float speed() {
-            return _abs(_acceleration);
         }
 
     private:
@@ -128,76 +136,103 @@ class ResponsiveAnalogRead
         // state
         float _input;
         float _output;
-        float _prevOutput;
-        int _reads;
+        float _outputAfterSettle;
+        float _prevOutputAfterSettle;
+        float _tension = 1.0;
+        int _reads; // 0, 1 or 2
+        float _velocity;
+        float _velocitySmoothed;
+        float _prevVelocity;
+        bool _isSettled;
+        int _settledFor;
 
         // algorithm params
         float _noiseFloor;
-        float _smooth;
-        float _smoothTension = 1.0;
-        float _smoothTensionAdjusted = 1.0;
         float _glide;
-        float _glideTension = 1.0;
-        float _settle;
-        float _settleTension = 1.0;
-        float _settleError = 0.0;
-        float _tension = 1.0;
-        float _velocity;
-        float _velocitySmoothed;
-        float _acceleration;
-        float _prevVelocity;
-        bool _isSettled;
+        float _smooth;
+        float _settleTime;
+        float _settleThreshold;
+
+        // precomputed algorithm params
+        float __lowX;
+        float __highX;
+        float __lowTension;
+        float __smoothTension = 1.0;
+        float __glideTension = 1.0;
 
         float _toTension(float amount) {
             return 1.0 / (amount + 1.0);
         }
 
         void _updateOutput() {
+            bool glideEnabled = _glide > 0.0;
+            bool smoothEnabled = _noiseFloor > 0.0 && _smooth > 0.0;
+            bool settleEnabled = _settleThreshold > 0.0;
+
             _prevVelocity = _velocity;
             _velocity = _output - _input;
 
+            if(smoothEnabled) {
+                _ema(_velocitySmoothed, _velocity, 0.25);
+                float acceleration = _velocitySmoothed - _prevVelocity;
 
-            // if(_settle > 0.0) {
-            //     _settleError += (speed - _settleError) * _settleTension;
-            //     _isSettled = _abs(_settleError) < _noiseFloor;
-            // } else {
-            //     _isSettled = false;
-            // }
-
-            _velocitySmoothed += (_velocity - _velocitySmoothed) * 0.25;
-            float acceleration = _velocitySmoothed - _prevVelocity;
-            _acceleration = acceleration;
-
-            float velocityTension = _calculateTension(acceleration, _noiseFloor * 0.5, _noiseFloor * 2.0, _smoothTension / _noiseFloor);
-            if(velocityTension > 1.0) {
-                velocityTension = 1.0;
-            }
-            _velocitySmoothed += (_velocity - _velocitySmoothed) * velocityTension;
-
-            if(_noiseFloor > 0.0) {
-                _tension = _calculateTension(_velocitySmoothed, _noiseFloor * 0.5, _noiseFloor * 2.0, _smoothTension / _noiseFloor);
+                float velocityTension;
+                _calculateTension(velocityTension, acceleration, __lowX, __highX, __lowTension);
+                _ema(_velocitySmoothed, _velocity, velocityTension);
+                _calculateTension(_tension, _velocitySmoothed, __lowX, __highX, __lowTension);
             } else {
                 _tension = 1.0;
             }
 
-            if(_tension > 1.0) {
-                _tension = 1.0;
+            if(glideEnabled && __glideTension < _tension) {
+                _tension = __glideTension;
             }
 
-            if(_glide > 0.0 && _glideTension < _tension) {
-                _tension = _glideTension;
+            _ema(_output, _input, _tension);
+
+            if(settleEnabled) {
+                if(_abs(_outputAfterSettle - _output) > _settleThreshold) {
+                    _settledFor = 0;
+                    _isSettled = false;
+                } else {
+                    bool isSettled = _settledFor > _settleTime;
+                    if(!isSettled) {
+                        _settledFor++;
+                    }
+                    _isSettled = isSettled;
+                }
+            } else {
+                _isSettled = false;
             }
 
-            _output = _output + (_input - _output) * _tension;
+            if(!_isSettled) {
+                _outputAfterSettle = _output;
+            }
         }
 
-        float _calculateTension(float x, float lowX, float highX, float lowTension) {
+        void _calculateTension(float& tension, float x, float lowX, float highX, float lowTension) {
             x = _abs(x);
             if(x < lowX) {
-                return lowTension;
+                tension = lowTension;
+            } else {
+                float m = (x - lowX) / (highX - lowX);
+                tension = m * (1.0 - lowTension) + lowTension;
+                if(tension > 1.0) {
+                    tension = 1.0;
+                }
             }
-            float m = (x - lowX) / (highX - lowX);
-            return m * (1.0 - lowTension) + lowTension;
+        }
+
+        void _calculateLowTension() {
+            __lowTension = __smoothTension / _noiseFloor;
+        }
+
+        void _ema(float& subject, float target, float tension) {
+            if(tension == 1.0) {
+                subject = target;
+            } else {
+                subject += (target - subject) * tension;
+            }
         }
 
         float _abs(float value) {
