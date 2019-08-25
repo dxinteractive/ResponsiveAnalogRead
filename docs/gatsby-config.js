@@ -1,19 +1,9 @@
 // @flow
+const {gatsbyConfig} = require('dcme-gatsby/lib/gatsby/gatsby-config');
+
 module.exports = {
-    pathPrefix: '/ResponsiveAnalogRead',
     siteMetadata: {
-        title: 'ResponsiveAnalogRead'
+        title: 'Dataparcels'
     },
-    plugins: [
-        'gatsby-plugin-sass',
-        'gatsby-plugin-react-helmet',
-        {
-            resolve: 'gatsby-transformer-remark',
-            options: {
-                plugins: [
-                    `gatsby-remark-prismjs`
-                ]
-            }
-        }
-    ]
+    ...gatsbyConfig
 };

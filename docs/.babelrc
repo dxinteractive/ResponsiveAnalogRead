@@ -1,7 +1,11 @@
 {
-  "plugins": [
-    ["prismjs", {
-        "languages": ["cpp"]
-    }]
-  ]
+    "presets": [
+        ["blueflag", {"browser": true, "library": true}]
+    ],
+    "plugins": [
+        "@babel/plugin-syntax-dynamic-import"
+    ],
+    "ignore": [
+        "lib/*"
+    ]
 }

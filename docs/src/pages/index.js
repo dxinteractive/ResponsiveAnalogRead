@@ -1,3 +1,8 @@
 // @flow
-import IndexView from '../index/IndexView';
-export default IndexView;
+import React from 'react';
+import Page from 'component/Page';
+import Demo from 'demo/Demo';
+
+export default () => <Page>
+    <Demo />
+</Page>;
