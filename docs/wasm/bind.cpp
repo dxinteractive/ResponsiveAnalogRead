@@ -13,7 +13,7 @@ EMSCRIPTEN_BINDINGS(my_class_example) {
     .function("glide", &ResponsiveAnalogRead::glide)
     .function("smooth", &ResponsiveAnalogRead::smooth)
     .function("settle_int", select_overload<void(int, int)>(&ResponsiveAnalogRead::settle))
-    .function("settle_double", select_overload<void(int, double)>(&ResponsiveAnalogRead::settle))
+    .function("settle_double", select_overload<void(double, int)>(&ResponsiveAnalogRead::settle))
     .function("doubleRead", &ResponsiveAnalogRead::doubleRead)
     .function("read", select_overload<void()>(&ResponsiveAnalogRead::read))
     .function("read_int", select_overload<void(int)>(&ResponsiveAnalogRead::read))

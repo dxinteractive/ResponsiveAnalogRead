@@ -47,24 +47,24 @@ class ResponsiveAnalogRead
             __highX = value * 2.0;
         }
 
-        void glide(double amount = 1.0) {
-            _glide = amount;
-            __glideTension = _toTension(amount * 5.0);
-        }
-
         void smooth(double amount = 1.0) {
             _smooth = amount;
             __smoothTension = _toTension(amount * 10.0);
             _calculateLowTension();
         }
 
-        void settle(int time, int threshold) {
+        void glide(double amount = 1.0) {
+            _glide = amount;
+            __glideTension = _toTension(amount * 5.0);
+        }
+
+        void settle(int threshold, int time = 0) {
             settle(time, (double)threshold);
         }
 
-        void settle(int time, double threshold = 1.5) {
+        void settle(double threshold = 5.0, int time = 0) {
+            _settle = threshold;
             _settleTime = time;
-            _settleThreshold = threshold;
         }
 
         void doubleRead(bool enable = true) {
@@ -144,10 +144,10 @@ class ResponsiveAnalogRead
 
         // algorithm params
         double _noiseFloor;
+        double _smooth = 1.0;
         double _glide;
-        double _smooth;
+        double _settle;
         double _settleTime;
-        double _settleThreshold;
 
         // precomputed algorithm params
         double __lowX;
@@ -161,9 +161,9 @@ class ResponsiveAnalogRead
         }
 
         void _updateOutput() {
-            bool glideEnabled = _glide > 0.0;
             bool smoothEnabled = _noiseFloor > 0.0 && _smooth > 0.0;
-            bool settleEnabled = _settleThreshold > 0.0;
+            bool glideEnabled = _glide > 0.0;
+            bool settleEnabled = _settle > 0.0;
 
             _prevVelocity = _velocity;
             _velocity = _output - _input;
@@ -186,19 +186,14 @@ class ResponsiveAnalogRead
 
             _ema(_output, _input, _tension);
 
-            if(settleEnabled) {
-                if(_abs(_outputAfterSettle - _output) > _settleThreshold) {
-                    _settledFor = 0;
-                    _isSettled = false;
-                } else {
-                    bool isSettled = _settledFor > _settleTime;
-                    if(!isSettled) {
-                        _settledFor++;
-                    }
-                    _isSettled = isSettled;
+            if(settleEnabled && _abs(_outputAfterSettle - _output) < _settle) {
+                _isSettled = _settledFor >= _settleTime;
+                if(!_isSettled) {
+                    _settledFor++;
                 }
             } else {
                 _isSettled = false;
+                _settledFor = 0;
             }
 
             if(!_isSettled) {
