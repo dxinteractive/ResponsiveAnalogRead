@@ -1,7 +1,7 @@
 // @flow
 
-import keyArray from 'unmutable/lib/keyArray';
-import pick from 'unmutable/lib/pick';
+import keyArray from 'unmutable/keyArray';
+import pick from 'unmutable/pick';
 
 export type SimulationTick = {
     input: number,
@@ -15,7 +15,9 @@ export type SimulationTick = {
 
 type SimulationConfig = {
     ResponsiveAnalogRead: *,
-    setMillis: Function
+    setMillis: Function,
+    setAnalogReadValue: Function,
+    defaultState?: State
 };
 
 const DEFAULT_STATE = {
@@ -29,12 +31,12 @@ const DEFAULT_STATE = {
     noisefloor: 0,
     glide: 2,
     smooth: 100,
-    settleTime: 3,
-    settleThreshold: 1,
-    glideEnabled: true,
+    settle: 5,
+    settleTime: 0,
+    doubleReadEnabled: false,
     smoothEnabled: true,
-    settleEnabled: true,
-    doubleReadEnabled: false
+    settleEnabled: false,
+    glideEnabled: false
 };
 
 export default class Simulation {
@@ -46,13 +48,14 @@ export default class Simulation {
     _setAnalogReadValue: Function = null;
     _setMillis: Function = null;
 
-    state: * = DEFAULT_STATE;
+    state: State;
     ticks: number = 0;
 
-    constructor({ResponsiveAnalogRead, setMillis, setAnalogReadValue}: SimulationConfig) {
+    constructor({ResponsiveAnalogRead, setMillis, setAnalogReadValue, defaultState}: SimulationConfig) {
         this._ResponsiveAnalogRead = ResponsiveAnalogRead;
         this._setMillis = setMillis;
         this._setAnalogReadValue = setAnalogReadValue;
+        this.state = defaultState || DEFAULT_STATE;
         this.start();
     }
 
@@ -61,7 +64,6 @@ export default class Simulation {
     };
 
     setState = (newState: *) => {
-        console.log('setState', newState);
         this.state = {
             ...this.state,
             ...pick(keyArray()(DEFAULT_STATE))(newState)
@@ -78,14 +80,14 @@ export default class Simulation {
             doubleReadEnabled,
             glide,
             smooth,
-            settleTime,
-            settleThreshold
+            settle,
+            settleTime
         } = this.state;
 
         this._analog.noiseFloor(noisefloor);
         this._analog.glide(glideEnabled ? glide : 0);
         this._analog.smooth(smoothEnabled ? smooth : 0);
-        this._analog.settle_double(settleTime, settleEnabled ? settleThreshold : 0);
+        this._analog.settle_double(settleEnabled ? settle : 0, settleTime);
         this._analog.doubleRead(doubleReadEnabled);
     };
 
@@ -97,6 +99,7 @@ export default class Simulation {
         this._analog = new this._ResponsiveAnalogRead();
         this.state.running = true;
         this._startTime = Date.now();
+        this.updateSettings();
         this.tick();
     };
 

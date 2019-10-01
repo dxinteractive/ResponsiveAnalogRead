@@ -29,14 +29,14 @@ export default (demoParcel: Parcel): string => {
         smooth,
         glide,
         settleTime,
-        settleThreshold,
+        settle,
         delay,
         pin
     } = demoParcel.value();
 
     let glideIsDefault = demoParcel.get('glide').meta().isDefault;
     let smoothIsDefault = demoParcel.get('smooth').meta().isDefault;
-    let settleThresholdIsDefault = demoParcel.get('settleThreshold').meta().isDefault;
+    let settleIsDefault = demoParcel.get('settle').meta().isDefault;
 
     let instances = Array(amount || 0)
         .fill(null)
@@ -51,7 +51,7 @@ export default (demoParcel: Parcel): string => {
         noisefloor && `analog${key}.noisefloor(${noisefloor.toFixed(1)});`,
         glideEnabled && `analog${key}.glide(${glideIsDefault ? "" : glide.toFixed(1)});`,
         smoothEnabled && `analog${key}.smooth(${smoothIsDefault ? "" : smooth.toFixed(1)});`,
-        settleEnabled && `analog${key}.settle(${settleTime.toFixed(0)}${settleThresholdIsDefault ? "" : ", " + settleThreshold.toFixed(1)});`,
+        settleEnabled && `analog${key}.settle(${settleTime.toFixed(0)}${settleIsDefault ? "" : ", " + settle.toFixed(1)});`,
         doubleReadEnabled && `analog${key}.doubleRead();`
     ]
         .filter(ii => ii)

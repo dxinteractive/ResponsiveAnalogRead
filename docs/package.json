@@ -17,14 +17,14 @@
   },
   "dependencies": {
     "chart.js": "^2.7.2",
-    "dcme-gatsby": "^0.5.0",
-    "dcme-style": "^0.27.4",
-    "gatsby": "^2.0.19",
+    "dcme-gatsby": "^1.0.2",
+    "dcme-style": "^1.0.0",
+    "exports-loader": "^0.7.0",
+    "gatsby": "^2.13.20",
     "gh-pages": "^1.1.0",
     "rc-slider": "^8.6.1",
     "react-chartjs-2": "^2.7.2",
-    "react-dataparcels": "^0.24.2",
-    "styled-components": "^4.3.2",
-    "styled-system": "^5.1.1"
+    "react-dataparcels": "^1.0.1",
+    "unmutable": "^0.46.0"
   }
 }

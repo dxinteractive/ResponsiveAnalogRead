@@ -1,11 +1,12 @@
 // @flow
-import type {Node} from "react";
+import type {Node} from 'react';
 
-import React from "react";
-import Helmet from "react-helmet";
-import {Head} from 'dcme-style';
-import {ThemeProvider} from 'styled-components';
-import {LightTheme} from 'style/Theme';
+import React from 'react';
+import Helmet from 'react-helmet';
+import {Head} from 'dcme-style/theme';
+import {Theme} from 'dcme-style/theme';
+import {mdxComponents} from 'dcme-style/core';
+import {MDXProvider} from '@mdx-js/react';
 
 type Props = {
     children: *
@@ -18,7 +19,9 @@ export default ({children}: Props): Node => <div>
         <meta name="description" content="An Arduino library for smoothing out noise" />
     </Helmet>
     <Head />
-    <ThemeProvider theme={LightTheme}>
-        {children}
-    </ThemeProvider>
+    <MDXProvider components={mdxComponents}>
+        <Theme>
+            {children}
+        </Theme>
+    </MDXProvider>
 </div>;
