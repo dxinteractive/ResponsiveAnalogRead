@@ -43,7 +43,7 @@ export default () => <SimulationLogic>
     {(props: Props) => {
         return <Card textStyle="monospace">
             <Box px={[3,3,4]}>
-                <Flex py={4} alignItems="end">
+                <Flex px={4} pt={4} alignItems="end">
                     <Box mr={3}>
                         <H1>ResponsiveAnalogRead</H1>
                     </Box>
@@ -51,21 +51,25 @@ export default () => <SimulationLogic>
                         <Text textStyle="code">v2.0.0</Text>
                     </Box>
                 </Flex>
-                <Box pb={4}>
-                    <Text>An Arduino library for smoothing out noise. <a href="https://github.com/dxinteractive/ResponsiveAnalogRead"><Link>github</Link></a></Text>
+                <Box px={4} pt={2} pb={4}>
+                    <Text>An Arduino library for smoothing out noise. <Link href="https://github.com/dxinteractive/ResponsiveAnalogRead">github</Link></Text>
                 </Box>
                 <Unselectable>
-                    <Flex height="25rem">
-                        <SimulationGraph width={.6} mx={3} {...props} />
-                        <DividerVertical />
-                        <SimulationControls mx={3} {...props} />
-                        <DividerVertical />
-                        <ConfigurationControls mx={3} {...props} />
+                    <Flex minHeight="25rem" flexWrap="wrap">
+                        <SimulationGraph mx={3} mb={4} width="43rem" {...props} />
+                        <Box height="25rem">
+                            <DividerVertical />
+                        </Box>
+                        <SimulationControls mx={3} mb={4} {...props} />
+                        <Box height="25rem">
+                            <DividerVertical />
+                        </Box>
+                        <ConfigurationControls mx={3} mb={4} {...props} />
                     </Flex>
                 </Unselectable>
-                <Box mt={5}>
+                <Box ml={4} mb={6} maxWidth="50rem">
                     <Card textStyle="copy">
-                        <DemoContent />
+                    <DemoContent />
                     </Card>
                 </Box>
             </Box>
@@ -180,20 +184,21 @@ const ConfigurationControls = (props: Props) => {
         <Flex flexGrow="1">
             <Flex>
                 <NumberSliderExponential
-                    label="noise floor"
-                    parcel={stateParcel.get('noisefloor')}
-                    min={min}
-                    max={max}
-                />
-            </Flex>
-            <Flex>
-                <NumberSliderExponential
                     label="smooth"
                     parcel={stateParcel.get('smooth')}
                     toggleParcel={stateParcel.get('smoothEnabled')}
                     disabled={!smoothEnabled}
                     min={0}
                     max={50}
+                />
+            </Flex>
+            <Flex>
+                <NumberSliderExponential
+                    label="noise floor"
+                    parcel={stateParcel.get('noisefloor')}
+                    disabled={!smoothEnabled}
+                    min={min}
+                    max={max}
                 />
             </Flex>
             <Flex>

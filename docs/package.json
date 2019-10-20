@@ -17,8 +17,8 @@
   },
   "dependencies": {
     "chart.js": "^2.7.2",
-    "dcme-gatsby": "^1.0.2",
-    "dcme-style": "^1.0.0",
+    "dcme-gatsby": "^1.0.3",
+    "dcme-style": "^1.1.1",
     "exports-loader": "^0.7.0",
     "gatsby": "^2.13.20",
     "gh-pages": "^1.1.0",

@@ -31,11 +31,11 @@ const DEFAULT_STATE = {
     noisefloor: 0,
     glide: 2,
     smooth: 100,
-    settle: 5,
-    settleTime: 0,
+    settle: 1,
+    settleTime: 3,
     doubleReadEnabled: false,
     smoothEnabled: true,
-    settleEnabled: false,
+    settleEnabled: true,
     glideEnabled: false
 };
 
