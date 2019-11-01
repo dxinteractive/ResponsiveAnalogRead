@@ -4,12 +4,34 @@ Move the **input slider** up and down to change the input signal and watch how t
 
 The **noise slider** controls how noisy the input readings are.
 
+## How to calibrate your configuration
+
+1. Choose your time interval, measure
+2. aswawdawdawd
+3. 
+
 ## Configuration
 
-The configuration controls allow you to test out different noise-reducing settings and see how they behave. `ResponsiveAnalogRead` has three noise reduction algorithms.
+The configuration controls allow you to test out different noise-reducing settings and see how they behave. `ResponsiveAnalogRead` has three noise reduction algorithms: smooth, glide and settle.
 
-### smooth
+### Smooth
 
-### glide
+```
+void smooth(double amount = 1.0)
+// defaults to 1.0
 
-### settle
+void noiseFloor(double value = 1.0)
+// defaults to 1.0
+```
+
+Smooth is a highly adaptive noise reduction algorithm that smooths out jitters while also being very responsive to fast changes in the input signal. It's on by default, and it's probably the main reason you'd be interested in even using this library. It removes noise quite effectively from inputs values that don't tend to change, and input values that change at constant or near-constant rates. When fast changes occur it responds very quickly to stick to the input values, removing the lag that you often get from simpler algorithms such as normal moving averages and exponential moving averages (EMAs).
+
+It's mainly built around a kind of second-order exponential moving average (EMA). The acceleration of the input signal is used as a variable smoothing factor to produce a smoothed velocity, and the smoothed velocity is used as a variable smoothing factor to produce a smoothed output value (position). This two step approach allows input values that change at constant or near-constant rates to be smoothed.
+
+The value set by `smooth()` determines how smoothed the output signal is. Lower values produce output signals with more noise and fast response times, higher values produce output signals with much less noise and slower response times.
+
+The `noisefloor()` method provides an alternative way of configuring smooth.
+
+### Glide
+
+### Settle
