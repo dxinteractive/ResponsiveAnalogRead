@@ -28,7 +28,11 @@
 
 void ResponsiveAnalogRead::begin(int pin, bool sleepEnable, float snapMultiplier){
     pinMode(pin, INPUT ); // ensure button pin is an input
-    digitalWrite(pin, LOW ); // ensure pullup is off on button pin
+    
+    // only does digitalWrite on architectures that support it
+#if !defined(ESP32) && !defined(ARDUINO_ARCH_ESP32)
+    digitalWrite(pin, LOW); // ensure pullup is off on button pin
+#endif
     
     this->pin = pin;
     this->sleepEnable = sleepEnable;
